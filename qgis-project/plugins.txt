@@ -1,0 +1,3 @@
+version 2.2.0 Valmeria
+plugin OpenLayers
+plugin Georeferencer

@@ -1,5 +1,5 @@
-<RCC>
-    <qresource prefix="/plugins/hibo" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
+<RCC> 
+  <qresource prefix="/plugins/hibo" > 
+    <file>icon.png</file> 
+  </qresource> 
+</RCC> 

@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 /***************************************************************************
- hibo
-                                 A QGIS plugin
- Quantum GIS plugin for semiautomated processing of historical maps
-                              -------------------
-        begin                : 2014-04-28
-        copyright            : (C) 2014 by Chair of Computer Vision in Engineering at Bauhaus-University Weimar
-        email                : marcus.kossatz@uni-weimar.de, suvratha.narayan.bejai@uni-weimar.de, frederilgaillard@googlemail.com, felix.schmidt@uni-weimar.de
+Name			 	 : HiBo
+Description          : Quantum GIS plugin for semiautomated processing of historical maps
+Date                 : 06/May/14 
+copyright            : (C) 2014 by Chair of Computer Vision in Engineer
+email                : marcus.kossatz@uni-weimar.de, volker.rodehorst@uni-weimar.de, suvratha.narayan.bejai@uni-weimar.de, frederic.gaillard@uni-weimar.de, felix.schmidt@uni-weimar.de 
  ***************************************************************************/
 
 /***************************************************************************
@@ -20,62 +17,45 @@
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
+from PyQt4.QtCore import * 
 from PyQt4.QtGui import *
 from qgis.core import *
 # Initialize Qt resources from file resources.py
-import resources_rc
+import resources
 # Import the code for the dialog
-from hibodialog import hiboDialog
-import os.path
+from hiboDialog import hiboDialog
 
+class hibo: 
 
-class hibo:
+  def __init__(self, iface):
+    # Save reference to the QGIS interface
+    self.iface = iface
 
-    def __init__(self, iface):
-        # Save reference to the QGIS interface
-        self.iface = iface
-        # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
-        # initialize locale
-        locale = QSettings().value("locale/userLocale")[0:2]
-        localePath = os.path.join(self.plugin_dir, 'i18n', 'hibo_{}.qm'.format(locale))
+  def initGui(self):  
+    # Create action that will start plugin configuration
+    self.action = QAction(QIcon(":/plugins/hibo/icon.png"), \
+        "HiBo", self.iface.mainWindow())
+    # connect the action to the run method
+    QObject.connect(self.action, SIGNAL("activated()"), self.run) 
 
-        if os.path.exists(localePath):
-            self.translator = QTranslator()
-            self.translator.load(localePath)
+    # Add toolbar button and menu item
+    self.iface.addToolBarIcon(self.action)
+    self.iface.addPluginToMenu("&HiBo", self.action)
 
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+  def unload(self):
+    # Remove the plugin menu item and icon
+    self.iface.removePluginMenu("&HiBo",self.action)
+    self.iface.removeToolBarIcon(self.action)
 
-        # Create the dialog (after translation) and keep reference
-        self.dlg = hiboDialog()
-
-    def initGui(self):
-        # Create action that will start plugin configuration
-        self.action = QAction(
-            QIcon(":/plugins/hibo/icon.png"),
-            u"HiBo", self.iface.mainWindow())
-        # connect the action to the run method
-        self.action.triggered.connect(self.run)
-
-        # Add toolbar button and menu item
-        self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&HiBo", self.action)
-
-    def unload(self):
-        # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(u"&HiBo", self.action)
-        self.iface.removeToolBarIcon(self.action)
-
-    # run method that performs all the real work
-    def run(self):
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result == 1:
-            # do something useful (delete the line containing pass and
-            # substitute with your code)
-            pass
+  # run method that performs all the real work
+  def run(self): 
+    # create and show the dialog 
+    dlg = hiboDialog() 
+    # show the dialog
+    dlg.show()
+    result = dlg.exec_() 
+    # See if OK was pressed
+    if result == 1: 
+      # do something useful (delete the line containing pass and
+      # substitute with your code
+      pass 

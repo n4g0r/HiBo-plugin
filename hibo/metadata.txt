@@ -1,38 +1,27 @@
-# This file contains metadata for your plugin. Beginning
-# with version 1.8 this is the preferred way to supply information about a
-# plugin. The current method of embedding metadata in __init__.py will
-# be supported until version 2.0
-
-# This file should be included when you package your plugin.
-
-# Mandatory items:
-
+; the next section is mandatory
 
 [general]
-name=HiBo
+name=hibo
+email=marcus.kossatz@uni-weimar.de, volker.rodehorst@uni-weimar.de, suvratha.narayan.bejai@uni-weimar.de, frederic.gaillard@uni-weimar.de, felix.schmidt@uni-weimar.de
+author=Chair of Computer Vision in Engineering at Bauhaus-Universität Weimar
 qgisMinimumVersion=2.0
 description=Quantum GIS plugin for semiautomated processing of historical maps
-version=0.1
-author=Chair of Computer Vision in Engineering at Bauhaus-University Weimar
-email=marcus.kossatz@uni-weimar.de, suvratha.narayan.bejai@uni-weimar.de, frederilgaillard@googlemail.com, felix.schmidt@uni-weimar.de
+version=version 0.1
+; end of mandatory metadata
 
-# end of mandatory metadata
+; start of optional metadata
+category=Raster
+changelog=
 
-# Optional items:
-
-# Uncomment the following line and add your changelog entries:
-# changelog=
-
-# tags are comma separated with spaces allowed
-tags=
-
-homepage=
-tracker=
-repository=
+; these metadata can be empty
+repository=https://github.com/MenschMarcus/HiBo-plugin.git
 icon=icon.png
-# experimental flag
+
+; experimental flag
 experimental=True
 
-# deprecated flag (applies to the whole plugin, not just a single version
+; deprecated flag (applies to the whole plugin and not only to the uploaded version)
 deprecated=False
 
+; if empty, it will be automatically set to major version + .99
+qgisMaximumVersion=

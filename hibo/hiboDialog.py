@@ -20,8 +20,15 @@ from PyQt4 import QtCore, QtGui
 from Ui_hibo import Ui_hibo
 # create the dialog for hibo
 class hiboDialog(QtGui.QDialog):
-  def __init__(self): 
-    QtGui.QDialog.__init__(self) 
-    # Set up the user interface from Designer. 
-    self.ui = Ui_hibo ()
-    self.ui.setupUi(self)
+    def __init__(self): 
+        QtGui.QDialog.__init__(self) 
+        # Set up the user interface from Designer. 
+        self.ui = Ui_hibo ()
+        self.ui.setupUi(self)
+        
+        self.ui.load_button.clicked.connect(self.loadImage)
+        
+    @QtCore.pyqtSlot()
+    def loadImage(self):
+       #add here code for loading image and delete pass
+       pass

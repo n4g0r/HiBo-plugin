@@ -17,6 +17,7 @@ email                : marcus.kossatz@uni-weimar.de, volker.rodehorst@uni-weimar
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
+from PyQt4 import QtCore,  QtGui
 from PyQt4.QtCore import * 
 from PyQt4.QtGui import *
 from qgis.core import *
@@ -27,35 +28,44 @@ from hiboDialog import hiboDialog
 
 class hibo: 
 
-  def __init__(self, iface):
-    # Save reference to the QGIS interface
-    self.iface = iface
+    def __init__(self, iface):
+        # Save reference to the QGIS interface
+        self.iface = iface
 
-  def initGui(self):  
-    # Create action that will start plugin configuration
-    self.action = QAction(QIcon(":/plugins/hibo/icon.png"), \
-        "HiBo", self.iface.mainWindow())
-    # connect the action to the run method
-    QObject.connect(self.action, SIGNAL("activated()"), self.run) 
+    @QtCore.pyqtSlot()
+    def loadImage(self):
+        print "test"
+        #self.labelHalloWelt.setText(self.editText.text()) 
 
-    # Add toolbar button and menu item
-    self.iface.addToolBarIcon(self.action)
-    self.iface.addPluginToMenu("&HiBo", self.action)
+    def connects(self):
+        self.iface.mainWindow.load_button.clicked.connect(self.loadImage)
 
-  def unload(self):
-    # Remove the plugin menu item and icon
-    self.iface.removePluginMenu("&HiBo",self.action)
-    self.iface.removeToolBarIcon(self.action)
+    def initGui(self):  
+        # Create action that will start plugin configuration
+        self.action = QAction(QIcon(":/plugins/hibo/icon.png"), "HiBo", self.iface.mainWindow())
+        # connect the action to the run method
+        QObject.connect(self.action, SIGNAL("activated()"), self.run) 
 
-  # run method that performs all the real work
-  def run(self): 
-    # create and show the dialog 
-    dlg = hiboDialog() 
-    # show the dialog
-    dlg.show()
-    result = dlg.exec_() 
-    # See if OK was pressed
-    if result == 1: 
-      # do something useful (delete the line containing pass and
-      # substitute with your code
-      pass 
+        # Add toolbar button and menu item
+        self.iface.addToolBarIcon(self.action)
+        self.iface.addPluginToMenu("&HiBo", self.action)
+
+    def unload(self):
+        # Remove the plugin menu item and icon
+        self.iface.removePluginMenu("&HiBo",self.action)
+        self.iface.removeToolBarIcon(self.action)
+
+    # run method that performs all the real work
+    def run(self): 
+        # create and show the dialog
+        dlg = hiboDialog() 
+        # show the dialog
+        dlg.show()
+        #bis hierher programm nach start
+        result = dlg.exec_() 
+        # See if OK was pressed
+        if result == 1: 
+            # do something useful (delete the line containing pass and
+            # substitute with your code
+            print "test1"
+

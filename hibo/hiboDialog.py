@@ -26,9 +26,8 @@ class hiboDialog(QtGui.QDialog):
         self.ui = Ui_hibo ()
         self.ui.setupUi(self)
         
-        self.ui.load_button.clicked.connect(self.loadImage)
+        #self.ui.load_button.clicked.connect(self.loadImage)
         
-    @QtCore.pyqtSlot()
-    def loadImage(self):
-       #add here code for loading image and delete pass
-       pass
+#    @QtCore.pyqtSlot()
+#    def loadImage(self):
+#       print "load Image"

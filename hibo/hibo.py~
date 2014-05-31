@@ -35,8 +35,8 @@ class hibo:
 	self.gui.setupUi()
 
         #initialize actions
-        """self.gui.load_button.clicked.connect(self.loadImage)
-        self.gui.cancel_button.clicked.connect(self.closeDialog)"""
+        self.gui.load_button.clicked.connect(self.loadImage)
+        self.gui.cancel_button.clicked.connect(self.closeDialog)
 
     def connects(self):
         #self.dlg.ui.load_button.clicked.connect(self.loadImage)
@@ -69,7 +69,7 @@ class hibo:
             # substitute with your code
             print "test1"
 
-    """@QtCore.pyqtSlot()
+    @QtCore.pyqtSlot()
     def loadImage(self):
         fileName = QFileDialog.getOpenFileName(None, "Select watermark image", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         #fileName = "/home/felix/programming/HiBo-plugin/hibo/map.tif"
@@ -82,4 +82,4 @@ class hibo:
         
     @QtCore.pyqtSlot()
     def closeDialog(self):
-        self.gui.close()"""
+        self.gui.close()

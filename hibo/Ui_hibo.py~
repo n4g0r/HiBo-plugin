@@ -32,6 +32,6 @@ class Ui_hibo(QtGui.QDialog):
         self.setWindowTitle(_translate("hibo", "hibo", None))
 
     def createComponents(self):
-        pass
+
 
         

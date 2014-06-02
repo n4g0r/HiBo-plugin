@@ -32,10 +32,10 @@ class Ui_hibo(QtGui.QDialog):
 	
 	self.toolbarVector = QtGui.QToolBar('vector', self)
 	self.toolbarRaster = QtGui.QToolBar('raster', self)
-	self.zoominVector = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominVector', self)
-	self.zoominRaster = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominRaster', self)
+	self.zoominVector = QtGui.QAction(QtGui.QIcon('/home/felix/programming/HiBo-plugin/hibo/icons/zoomin.png'), 'zoominVector', self)
+	self.zoominRaster = QtGui.QAction(QtGui.QIcon("icon.png"), 'zoominRaster', self)
 	self.zoomoutVector = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutVector', self)
-	self.zoomoutRaster = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutRaster', self)
+	self.zoomoutRaster = QtGui.QAction(QtGui.QIcon(":icons/zoomout.png"), 'zoomoutRaster', self)
 
 
 	self.toolbarVector.addAction(self.zoominVector)

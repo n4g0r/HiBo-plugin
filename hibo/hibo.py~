@@ -46,7 +46,7 @@ class hibo:
 
     def initGui(self):  
         # Create action that will start plugin configuration
-        self.action = QAction(QIcon(":/plugins/hibo/icons/icon.png"), "HiBo", self.iface.mainWindow())
+        self.action = QAction(QIcon(":/plugins/hibo/icon.png"), "HiBo", self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("activated()"), self.run) 
 

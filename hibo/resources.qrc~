@@ -1,8 +1,0 @@
-<RCC> 
-  <qresource prefix="/plugins/hibo/icons" > 
-    <file>icon.png</file>
-  </qresource>
-  <qresource prefix="/plugins/hibo/icons" > 
-    <file>zoomin.png</file>
-  </qresource> 
-</RCC> 

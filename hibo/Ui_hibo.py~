@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
 import sys
 import os
+=======
+>>>>>>> 7b99855d6896ab6153962d6d44d5f9679a331b0c
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -23,6 +26,7 @@ class Ui_hibo(QtGui.QDialog):
         
     def __init__(self): 
         QtGui.QDialog.__init__(self)
+<<<<<<< HEAD
 	self.setupUi()
 
         self.setWindowTitle(self.tr("HiBo"))
@@ -32,10 +36,10 @@ class Ui_hibo(QtGui.QDialog):
 	
 	self.toolbarVector = QtGui.QToolBar('vector', self)
 	self.toolbarRaster = QtGui.QToolBar('raster', self)
-	self.zoominVector = QtGui.QAction(QtGui.QIcon('/home/felix/programming/HiBo-plugin/hibo/icons/zoomin.png'), 'zoominVector', self)
-	self.zoominRaster = QtGui.QAction(QtGui.QIcon("icon.png"), 'zoominRaster', self)
+	self.zoominVector = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominVector', self)
+	self.zoominRaster = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominRaster', self)
 	self.zoomoutVector = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutVector', self)
-	self.zoomoutRaster = QtGui.QAction(QtGui.QIcon(":icons/zoomout.png"), 'zoomoutRaster', self)
+	self.zoomoutRaster = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutRaster', self)
 
 
 	self.toolbarVector.addAction(self.zoominVector)
@@ -64,4 +68,20 @@ class Ui_hibo(QtGui.QDialog):
 	
     def retranslateUi(self):
         self.setWindowTitle(_translate("hibo", "hibo", None))
+=======
+	self.createComponents()
+	self.setupUi()
 
+    def setupUi(self):
+	# QDialog (self) is base for GUI-Elements
+
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+    def retranslateUi(self):
+        self.setWindowTitle(_translate("hibo", "hibo", None))
+
+    def createComponents(self):
+        pass
+>>>>>>> 7b99855d6896ab6153962d6d44d5f9679a331b0c
+
+        

@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
 import sys
 import os
+
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -23,6 +25,7 @@ class Ui_hibo(QtGui.QDialog):
         
     def __init__(self): 
         QtGui.QDialog.__init__(self)
+
 	self.setupUi()
 
         self.setWindowTitle(self.tr("HiBo"))

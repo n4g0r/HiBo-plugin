@@ -40,7 +40,8 @@ class Ui_hibo(QtGui.QDialog):
 	self.zoominRaster 	= QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominRaster', self)
 	self.zoomoutRaster 	= QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutRaster', self)
 	self.moveRaster 	= QtGui.QAction(QtGui.QIcon("move.png"), 'moveRaster', self)
-	self.loadRaster 	= QtGui.QAction(QtGui.QIcon("load.png"), 'loadRaster', self)	
+	self.loadRaster 	= QtGui.QAction(QtGui.QIcon("load.png"), 'loadRaster', self)
+	self.selectRaster	= QtGui.QAction(QtGui.QIcon("select.png"), 'selectRaster', self)	
 
 	self.toolbarVector.addAction(self.loadVector)
 	self.toolbarVector.addAction(self.zoominVector)
@@ -51,6 +52,7 @@ class Ui_hibo(QtGui.QDialog):
 	self.toolbarRaster.addAction(self.zoominRaster)
 	self.toolbarRaster.addAction(self.zoomoutRaster)
 	self.toolbarRaster.addAction(self.moveRaster)
+	self.toolbarRaster.addAction(self.selectRaster)
 	#self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
 
 	

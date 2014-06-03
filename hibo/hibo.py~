@@ -63,10 +63,6 @@ class hibo:
     def run(self): 
         # show the dialog
         self.gui.show()
-<<<<<<< HEAD
-	print os.getcwd()
-=======
->>>>>>> 7b99855d6896ab6153962d6d44d5f9679a331b0c
         #bis hierher programm nach start
         result = self.gui.exec_() 
         # See if OK was pressed

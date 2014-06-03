@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
 import sys
 import os
 
@@ -25,35 +24,42 @@ class Ui_hibo(QtGui.QDialog):
         
     def __init__(self): 
         QtGui.QDialog.__init__(self)
-
 	self.setupUi()
 
         self.setWindowTitle(self.tr("HiBo"))
 
     def setupUi(self):
 	"""setup for toolbar"""
-	
-	self.toolbarVector = QtGui.QToolBar('vector', self)
-	self.toolbarRaster = QtGui.QToolBar('raster', self)
-	self.zoominVector = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominVector', self)
-	self.zoominRaster = QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominRaster', self)
-	self.zoomoutVector = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutVector', self)
-	self.zoomoutRaster = QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutRaster', self)
+	self.toolbarVector 	= QtGui.QToolBar('vector', self)
+	self.toolbarRaster 	= QtGui.QToolBar('raster', self)
 
+	self.zoominVector 	= QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominVector', self)
+	self.zoomoutVector 	= QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutVector', self)
+	self.moveVector 	= QtGui.QAction(QtGui.QIcon("move.png"), 'moveVector', self)
+	self.loadVector 	= QtGui.QAction(QtGui.QIcon("load.png"), 'loadVector', self)
+	self.zoominRaster 	= QtGui.QAction(QtGui.QIcon("zoomin.png"), 'zoominRaster', self)
+	self.zoomoutRaster 	= QtGui.QAction(QtGui.QIcon("zoomout.png"), 'zoomoutRaster', self)
+	self.moveRaster 	= QtGui.QAction(QtGui.QIcon("move.png"), 'moveRaster', self)
+	self.loadRaster 	= QtGui.QAction(QtGui.QIcon("load.png"), 'loadRaster', self)	
 
+	self.toolbarVector.addAction(self.loadVector)
 	self.toolbarVector.addAction(self.zoominVector)
 	self.toolbarVector.addAction(self.zoomoutVector)
+	self.toolbarVector.addAction(self.moveVector)
+	
+	self.toolbarRaster.addAction(self.loadRaster)	
 	self.toolbarRaster.addAction(self.zoominRaster)
 	self.toolbarRaster.addAction(self.zoomoutRaster)
+	self.toolbarRaster.addAction(self.moveRaster)
 	#self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
 
 	
 	"""layout"""
-	vectorarea = QtGui.QWidget()
-	rasterarea = QtGui.QWidget()
+	vectorarea 	= QtGui.QWidget()
+	rasterarea 	= QtGui.QWidget()
 
-	layoutVector = QtGui.QHBoxLayout()
-	layoutRaster = QtGui.QVBoxLayout()
+	layoutVector 	= QtGui.QHBoxLayout()
+	layoutRaster 	= QtGui.QVBoxLayout()
 
 	vectorarea.setLayout(layoutVector)
 	rasterarea.setLayout(layoutRaster)

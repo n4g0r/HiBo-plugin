@@ -3,7 +3,5 @@
     <file>icon.png</file>
     <file>zoomin.png</file>
     <file>zoomout.png</file>
-    <file>move.png</file>
-    <file>move.png</file>
   </qresource> 
 </RCC> 

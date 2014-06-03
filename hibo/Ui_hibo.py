@@ -5,6 +5,11 @@ import sys
 import os
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import * 
+from PyQt4.QtGui import *
+from qgis.core import *
+from qgis.gui import *
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -25,6 +30,8 @@ class Ui_hibo(QtGui.QDialog):
     def __init__(self): 
         QtGui.QDialog.__init__(self)
 	self.setupUi()
+
+	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadImage)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -54,20 +61,41 @@ class Ui_hibo(QtGui.QDialog):
 	self.toolbarRaster.addAction(self.moveRaster)
 	self.toolbarRaster.addAction(self.selectRaster)
 	#self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
+	
+	"""setup for canvas"""
+	self.canvasVector	= QgsMapCanvas()
+	self.canvasVector.show()
+	#self.canvasVector.setCanvasColor(QtGui.QColor(255,255,255,255))
+	#self.canvasVector.enableAntiAliasing(True)
+	self.canvasRaster	= QgsMapCanvas()
+	self.canvasRaster.show()
+	#self.canvasRaster.setCanvasColor(QtGui.QColor(255,255,255,255))
+	#self.canvasRaster.enableAntiAliasing(True)
 
+	"""self.fileName = "/home/felix/programming/HiBo-plugin/hibo/map.tif"
+        self.fileInfo = QFileInfo(self.fileName)
+        self.baseName = self.fileInfo.baseName()
+        self.rlayer = QgsRasterLayer(self.fileName, self.baseName)
+        if not self.rlayer.isValid():
+            print "Layer failed to load!"
+        QgsMapLayerRegistry.instance().addMapLayer(self.rlayer)
+	self.canvasRaster.setExtent(self.rlayer.extent())
+	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )"""
 	
 	"""layout"""
 	vectorarea 	= QtGui.QWidget()
 	rasterarea 	= QtGui.QWidget()
 
-	layoutVector 	= QtGui.QHBoxLayout()
+	layoutVector 	= QtGui.QVBoxLayout()
 	layoutRaster 	= QtGui.QVBoxLayout()
 
 	vectorarea.setLayout(layoutVector)
 	rasterarea.setLayout(layoutRaster)
 
 	layoutVector.addWidget(self.toolbarVector)
+	layoutVector.addWidget(self.canvasVector)
 	layoutRaster.addWidget(self.toolbarRaster)
+	layoutRaster.addWidget(self.canvasRaster)
 
 	layoutCentral = QtGui.QHBoxLayout(self)
 	layoutCentral.addWidget(vectorarea)
@@ -75,4 +103,19 @@ class Ui_hibo(QtGui.QDialog):
 	
     def retranslateUi(self):
         self.setWindowTitle(_translate("hibo", "hibo", None))
+
+    @QtCore.pyqtSlot()
+    def loadImage(self):
+	print "slot works"
+        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileInfo = QFileInfo(fileName)
+        baseName = fileInfo.baseName()
+        rlayer = QgsRasterLayer(fileName, baseName)
+        if not rlayer.isValid():
+            print "Layer failed to load!"
+        QgsMapLayerRegistry.instance().addMapLayer(rlayer)
+	self.canvasRaster.setExtent(rlayer.extent())
+	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(rlayer) ] )
+	self.canvasRaster.show()
+
 

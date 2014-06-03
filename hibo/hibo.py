@@ -37,7 +37,7 @@ class hibo:
 	self.gui.setupUi()
 
         #initialize actions
-        """self.gui.load_button.clicked.connect(self.loadImage)
+        """self.gui.loadRaster.triggered().connect(self.loadImage)
         self.gui.cancel_button.clicked.connect(self.closeDialog)"""
 
     def connects(self):
@@ -46,7 +46,7 @@ class hibo:
 
     def initGui(self):  
         # Create action that will start plugin configuration
-        self.action = QAction(QIcon(":/plugins/hibo/icons/icon.png"), "HiBo", self.iface.mainWindow())
+        self.action = QAction(QIcon("icon.png"), "HiBo", self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("activated()"), self.run) 
 
@@ -63,7 +63,7 @@ class hibo:
     def run(self): 
         # show the dialog
         self.gui.show()
-	print os.getcwd()
+	#print os.getcwd()
         #bis hierher programm nach start
         result = self.gui.exec_() 
         # See if OK was pressed
@@ -71,18 +71,7 @@ class hibo:
             # do something useful (delete the line containing pass and
             # substitute with your code
             print "test1"
-
-    """@QtCore.pyqtSlot()
-    def loadImage(self):
-        fileName = QFileDialog.getOpenFileName(None, "Select watermark image", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        #fileName = "/home/felix/programming/HiBo-plugin/hibo/map.tif"
-        fileInfo = QFileInfo(fileName)
-        baseName = fileInfo.baseName()
-        rlayer = QgsRasterLayer(fileName, baseName)
-        if not rlayer.isValid():
-            print "Layer failed to load!"
-        QgsMapLayerRegistry.instance().addMapLayer(rlayer)
         
-    @QtCore.pyqtSlot()
+    """@QtCore.pyqtSlot()
     def closeDialog(self):
         self.gui.close()"""

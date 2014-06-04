@@ -31,7 +31,7 @@ class Ui_hibo(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
 	self.setupUi()
 
-	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadImage)
+	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -64,23 +64,11 @@ class Ui_hibo(QtGui.QDialog):
 	
 	"""setup for canvas"""
 	self.canvasVector	= QgsMapCanvas()
-	self.canvasVector.show()
-	#self.canvasVector.setCanvasColor(QtGui.QColor(255,255,255,255))
-	#self.canvasVector.enableAntiAliasing(True)
+	self.canvasVector.setCanvasColor(QtGui.QColor(255,255,255,255))
+	self.canvasVector.enableAntiAliasing(True)
 	self.canvasRaster	= QgsMapCanvas()
-	self.canvasRaster.show()
-	#self.canvasRaster.setCanvasColor(QtGui.QColor(255,255,255,255))
-	#self.canvasRaster.enableAntiAliasing(True)
-
-	"""self.fileName = "/home/felix/programming/HiBo-plugin/hibo/map.tif"
-        self.fileInfo = QFileInfo(self.fileName)
-        self.baseName = self.fileInfo.baseName()
-        self.rlayer = QgsRasterLayer(self.fileName, self.baseName)
-        if not self.rlayer.isValid():
-            print "Layer failed to load!"
-        QgsMapLayerRegistry.instance().addMapLayer(self.rlayer)
-	self.canvasRaster.setExtent(self.rlayer.extent())
-	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )"""
+	self.canvasRaster.setCanvasColor(QtGui.QColor(255,255,255,255))
+	self.canvasRaster.enableAntiAliasing(True)
 	
 	"""layout"""
 	vectorarea 	= QtGui.QWidget()
@@ -105,7 +93,7 @@ class Ui_hibo(QtGui.QDialog):
         self.setWindowTitle(_translate("hibo", "hibo", None))
 
     @QtCore.pyqtSlot()
-    def loadImage(self):
+    def loadRasterImage(self):
 	print "slot works"
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
@@ -114,8 +102,8 @@ class Ui_hibo(QtGui.QDialog):
         if not rlayer.isValid():
             print "Layer failed to load!"
         QgsMapLayerRegistry.instance().addMapLayer(rlayer)
+	print rlayer.extent().yMinimum()
 	self.canvasRaster.setExtent(rlayer.extent())
 	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(rlayer) ] )
-	self.canvasRaster.show()
 
 

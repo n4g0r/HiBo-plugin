@@ -7,6 +7,7 @@ import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import * 
 from PyQt4.QtGui import *
+from qgis import core, gui
 from qgis.core import *
 from qgis.gui import *
 
@@ -98,12 +99,20 @@ class Ui_hibo(QtGui.QDialog):
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
-        rlayer = QgsRasterLayer(fileName, baseName)
-        if not rlayer.isValid():
+        self.rlayer = QgsRasterLayer(fileName, baseName)
+        if not self.rlayer.isValid():
             print "Layer failed to load!"
-        QgsMapLayerRegistry.instance().addMapLayer(rlayer)
-	print rlayer.extent().yMinimum()
-	self.canvasRaster.setExtent(rlayer.extent())
-	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(rlayer) ] )
+        QgsMapLayerRegistry.instance().addMapLayer(self.rlayer, False)
+	self.canvasRaster.setExtent(self.rlayer.extent())
+	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
+
+
+	"""r = QgsRubberBand(canvasRaster, True)
+	points = [ [ QgsPoint(-10,-10), QgsPoint(0,10), QgsPoint(10,-10) ] ] 
+	r.setToGeometry(QgsGeometry.fromPolygon(points), None)"""
+
+	self.canvasRaster.setCurrentLayer(self.rlayer)
+	self.canvasRaster.setVisible(True)
+	self.canvasRaster.refresh() 
 
 

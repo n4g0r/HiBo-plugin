@@ -31,47 +31,22 @@ from Ui_hibo import Ui_hibo
 class hibo: 
 
     def __init__(self, iface):
-        # Save reference to the QGIS interface
         self.iface = iface
         self.gui = Ui_hibo ()
 	self.gui.setupUi()
 
-        #initialize actions
-        """self.gui.loadRaster.triggered().connect(self.loadImage)
-        self.gui.cancel_button.clicked.connect(self.closeDialog)"""
-
-    def connects(self):
-        #self.dlg.ui.load_button.clicked.connect(self.loadImage)
-        pass
 
     def initGui(self):  
-        # Create action that will start plugin configuration
         self.action = QAction(QIcon("icon.png"), "HiBo", self.iface.mainWindow())
-        # connect the action to the run method
         QObject.connect(self.action, SIGNAL("activated()"), self.run) 
 
-        # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
         self.iface.addPluginToMenu("&HiBo", self.action)
 
     def unload(self):
-        # Remove the plugin menu item and icon
         self.iface.removePluginMenu("&HiBo",self.action)
         self.iface.removeToolBarIcon(self.action)
 
-    # run method that performs all the real work
     def run(self): 
-        # show the dialog
         self.gui.show()
-	#print os.getcwd()
-        #bis hierher programm nach start
         result = self.gui.exec_() 
-        # See if OK was pressed
-        if result == 1: 
-            # do something useful (delete the line containing pass and
-            # substitute with your code
-            print "test1"
-        
-    """@QtCore.pyqtSlot()
-    def closeDialog(self):
-        self.gui.close()"""

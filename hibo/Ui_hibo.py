@@ -33,7 +33,8 @@ class Ui_hibo(QtGui.QDialog):
 	self.setupUi()
 
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
-	self.connect(self.zoominRaster, QtCore.SIGNAL('triggered()'), self.checkColor)
+	self.connect(self.zoominRaster, QtCore.SIGNAL('triggered()'), self.canvasRaster.refresh)
+	#self.connect(self.zoomoutRaster, QtCore.SIGNAL('triggered()'), self.canvasRaster.showError)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -101,22 +102,30 @@ class Ui_hibo(QtGui.QDialog):
         self.rlayer = QgsRasterLayer(fileName, baseName)
         if not self.rlayer.isValid():
             print "Layer failed to load!"
-        QgsMapLayerRegistry.instance().addMapLayer(self.rlayer, False)
+
+	layerlist = []
+	layerlist.append(self.rlayer)
+	
+        QgsMapLayerRegistry.instance().addMapLayers(layerlist, False) 
 	self.canvasRaster.setExtent(self.rlayer.extent())
 	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
+	self.canvasRaster.showError(self.rlayer);
 
-	print self.canvasRaster.canvasColor().getRgb()
 	self.canvasRaster.setCanvasColor(Qt.black)	
 	
 	self.canvasRaster.setCurrentLayer(self.rlayer)
 	self.canvasRaster.setVisible(True)
-	self.canvasRaster.refresh() 
+	self.canvasRaster.refresh()
+	self.show()
 
-	print self.canvasRaster.canvasColor().getRgb()
+	
+	while self.canvasRaster.isDrawing() == True:
+	    print "rendering"
+	print "finished"
 
-    @QtCore.pyqtSlot()
+    """@QtCore.pyqtSlot()
     def checkColor(self):
 	print self.canvasRaster.canvasColor().getRgb()
-	self.canvasRaster.refresh() 
+	self.canvasRaster.refresh() """
 
 

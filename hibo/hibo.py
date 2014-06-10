@@ -33,8 +33,6 @@ class hibo:
     def __init__(self, iface):
         self.iface = iface
         self.gui = Ui_hibo ()
-	#self.gui.setupUi()
-
 
     def initGui(self):  
         self.action = QAction(QIcon("icon.png"), "HiBo", self.iface.mainWindow())

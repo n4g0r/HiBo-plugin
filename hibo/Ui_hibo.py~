@@ -34,7 +34,8 @@ class Ui_hibo(QtGui.QDialog):
 
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
 	self.connect(self.zoominRaster, QtCore.SIGNAL('triggered()'), self.canvasRaster.refresh)
-	#self.connect(self.zoomoutRaster, QtCore.SIGNAL('triggered()'), self.canvasRaster.showError)
+	self.connect(self.zoomoutRaster, QtCore.SIGNAL('triggered()'), self.showdlg)
+	#self.connect(self.canvasRaster.mapCanvasRefreshed, self.refreshed)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -66,11 +67,39 @@ class Ui_hibo(QtGui.QDialog):
 	
 	"""setup for canvas"""
 	self.canvasVector	= QgsMapCanvas()
-	self.canvasVector.setCanvasColor(Qt.white)
-	self.canvasVector.enableAntiAliasing(True)
+	#self.canvasVector.setCanvasColor(Qt.white)
+	#self.canvasVector.enableAntiAliasing(True)
 	self.canvasRaster	= QgsMapCanvas()
-	self.canvasRaster.setCanvasColor(Qt.white)
-	self.canvasRaster.enableAntiAliasing(True)
+	#self.canvasRaster.setCanvasColor(Qt.white)
+	#self.canvasRaster.enableAntiAliasing(True)
+
+
+	"""fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileInfo = QFileInfo(fileName)
+        baseName = fileInfo.baseName()
+        self.rlayer = QgsRasterLayer(fileName, baseName)
+        if not self.rlayer.isValid():
+            print "Layer failed to load!"
+	
+	self.rlayer.extent()
+	layerlist = []
+	layerlist.append(self.rlayer)
+	
+        QgsMapLayerRegistry.instance().addMapLayers(layerlist, False) 
+	self.canvasRaster.setExtent(self.rlayer.extent())
+	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
+	#self.canvasRaster.showError(self.rlayer);
+	
+	self.canvasRaster.setCurrentLayer(self.rlayer)
+	self.canvasRaster.setVisible(True)
+	self.canvasRaster.refresh()
+	self.canvasRaster.updateMap()
+	
+	while self.canvasRaster.isDrawing() == True:
+	    print "rendering"
+	print "finished" """
+
+
 	
 	"""layout"""
 	vectorarea 	= QtGui.QWidget()
@@ -102,30 +131,31 @@ class Ui_hibo(QtGui.QDialog):
         self.rlayer = QgsRasterLayer(fileName, baseName)
         if not self.rlayer.isValid():
             print "Layer failed to load!"
-
+	
+	self.rlayer.extent()
 	layerlist = []
-	layerlist.append(rlayer)
+	layerlist.append(self.rlayer)
 	
         QgsMapLayerRegistry.instance().addMapLayers(layerlist, False) 
 	self.canvasRaster.setExtent(self.rlayer.extent())
 	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
-	self.canvasRaster.showError(self.rlayer);
-
-	self.canvasRaster.setCanvasColor(Qt.black)	
+	#self.canvasRaster.showError(self.rlayer);
 	
 	self.canvasRaster.setCurrentLayer(self.rlayer)
 	self.canvasRaster.setVisible(True)
 	self.canvasRaster.refresh()
-	self.show()
-
+	self.canvasRaster.updateMap()
 	
 	while self.canvasRaster.isDrawing() == True:
 	    print "rendering"
 	print "finished"
 
-    """@QtCore.pyqtSlot()
-    def checkColor(self):
-	print self.canvasRaster.canvasColor().getRgb()
-	self.canvasRaster.refresh() """
+    @QtCore.pyqtSlot()
+    def showdlg(self):
+	self.update()
+
+    def refreshed(self):
+	print "refreshed"
+	
 
 

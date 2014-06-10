@@ -33,6 +33,7 @@ class Ui_hibo(QtGui.QDialog):
 	self.setupUi()
 
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
+	self.connect(self.zoominRaster, QtCore.SIGNAL('triggered()'), self.checkColor)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -61,14 +62,13 @@ class Ui_hibo(QtGui.QDialog):
 	self.toolbarRaster.addAction(self.zoomoutRaster)
 	self.toolbarRaster.addAction(self.moveRaster)
 	self.toolbarRaster.addAction(self.selectRaster)
-	#self.connect(self.exit, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
 	
 	"""setup for canvas"""
 	self.canvasVector	= QgsMapCanvas()
-	self.canvasVector.setCanvasColor(QtGui.QColor(255,255,255,255))
+	self.canvasVector.setCanvasColor(Qt.white)
 	self.canvasVector.enableAntiAliasing(True)
 	self.canvasRaster	= QgsMapCanvas()
-	self.canvasRaster.setCanvasColor(QtGui.QColor(255,255,255,255))
+	self.canvasRaster.setCanvasColor(Qt.white)
 	self.canvasRaster.enableAntiAliasing(True)
 	
 	"""layout"""
@@ -95,7 +95,6 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-	print "slot works"
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
@@ -106,13 +105,18 @@ class Ui_hibo(QtGui.QDialog):
 	self.canvasRaster.setExtent(self.rlayer.extent())
 	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
 
-
-	"""r = QgsRubberBand(canvasRaster, True)
-	points = [ [ QgsPoint(-10,-10), QgsPoint(0,10), QgsPoint(10,-10) ] ] 
-	r.setToGeometry(QgsGeometry.fromPolygon(points), None)"""
-
+	print self.canvasRaster.canvasColor().getRgb()
+	self.canvasRaster.setCanvasColor(Qt.black)	
+	
 	self.canvasRaster.setCurrentLayer(self.rlayer)
 	self.canvasRaster.setVisible(True)
+	self.canvasRaster.refresh() 
+
+	print self.canvasRaster.canvasColor().getRgb()
+
+    @QtCore.pyqtSlot()
+    def checkColor(self):
+	print self.canvasRaster.canvasColor().getRgb()
 	self.canvasRaster.refresh() 
 
 

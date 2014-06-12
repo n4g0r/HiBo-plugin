@@ -32,6 +32,7 @@ class Ui_hibo(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
 	self.setupUi()
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
+	self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), self.loadVectorImage)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -100,10 +101,10 @@ class Ui_hibo(QtGui.QDialog):
         if not self.rlayer.isValid():
             print "Layer failed to load!"
 	self.rlayer.extent()
-	layerlist = []
-	layerlist.append(self.rlayer)
+	layerlistr = []
+	layerlistr.append(self.rlayer)
 	
-        QgsMapLayerRegistry.instance().addMapLayers(layerlist, False) 
+        QgsMapLayerRegistry.instance().addMapLayers(layerlistr, False) 
 	self.canvasRaster.setExtent(self.rlayer.extent())
 	self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
 	
@@ -111,6 +112,20 @@ class Ui_hibo(QtGui.QDialog):
 	self.canvasRaster.setVisible(True)
 	self.canvasRaster.refresh()
 
-    """@QtCore.pyqtSlot()
+    @QtCore.pyqtSlot()
     def loadVectorImage(self):
-        vlayer = QgsVectorLayer("/path/to/shapefile/file.shp", "layer_name_you_like", "ogr")"""
+        self.vlayer = QgsVectorLayer("/home/felix/programming/HiBo-plugin/hibo/naturalearthdata/ne_10m_admin_0_boundary_lines_disputed_areas/ne_10m_admin_0_boundary_lines_disputed_areas.shp", "layer_name_you_like", "ogr")
+	if not self.vlayer.isValid():
+            print "Layer failed to load!"
+	self.vlayer.extent()
+	layerlistv = []
+	layerlistv.append(self.vlayer)
+
+	QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
+	self.canvasVector.setExtent(self.vlayer.extent())
+	self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.vlayer) ] )
+	
+	self.canvasVector.setCurrentLayer(self.vlayer)
+	self.canvasVector.setVisible(True)
+	self.canvasVector.refresh()
+	

@@ -31,7 +31,6 @@ class Ui_hibo(QtGui.QDialog):
     def __init__(self): 
         QtGui.QDialog.__init__(self)
 	self.setupUi()
-
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
 
         self.setWindowTitle(self.tr("HiBo"))
@@ -111,3 +110,7 @@ class Ui_hibo(QtGui.QDialog):
 	self.canvasRaster.setCurrentLayer(self.rlayer)
 	self.canvasRaster.setVisible(True)
 	self.canvasRaster.refresh()
+
+    """@QtCore.pyqtSlot()
+    def loadVectorImage(self):
+        vlayer = QgsVectorLayer("/path/to/shapefile/file.shp", "layer_name_you_like", "ogr")"""

@@ -33,6 +33,8 @@ class Ui_hibo(QtGui.QDialog):
 	self.setupUi()
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
 	self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), self.loadVectorImage)
+	self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
+	self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
 
         self.setWindowTitle(self.tr("HiBo"))
 
@@ -114,18 +116,41 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadVectorImage(self):
-        self.vlayer = QgsVectorLayer("/home/felix/programming/HiBo-plugin/hibo/naturalearthdata/ne_10m_admin_0_boundary_lines_disputed_areas/ne_10m_admin_0_boundary_lines_disputed_areas.shp", "layer_name_you_like", "ogr")
-	if not self.vlayer.isValid():
-            print "Layer failed to load!"
-	self.vlayer.extent()
 	layerlistv = []
-	layerlistv.append(self.vlayer)
+	 
+        self.coastline_layer = QgsVectorLayer("ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
+	if not self.coastline_layer.isValid():
+            print "Layer failed to load!"
+	self.coastline_layer.extent()
+	layerlistv.append(self.coastline_layer)
+
+
+	self.admin0_layer = QgsVectorLayer("ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
+	if not self.admin0_layer.isValid():
+            print "Layer failed to load!"
+	self.admin0_layer.extent()
+	layerlistv.append(self.admin0_layer)
+
+	self.admin1_layer = QgsVectorLayer("ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
+	if not self.admin1_layer.isValid():
+            print "Layer failed to load!"
+	self.admin1_layer.extent()
+	layerlistv.append(self.admin1_layer)
 
 	QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
-	self.canvasVector.setExtent(self.vlayer.extent())
-	self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.vlayer) ] )
+	self.canvasVector.setExtent(self.coastline_layer.extent())
+	self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer)] )
 	
-	self.canvasVector.setCurrentLayer(self.vlayer)
+	#self.canvasVector.setCurrentLayer(self.vlayer)
 	self.canvasVector.setVisible(True)
 	self.canvasVector.refresh()
+
+    @QtCore.pyqtSlot()
+    def selectPoints(self):
+	m = QgsVertexMarker(self.canvasRaster)
+	m.setCenter(QgsPoint(10,-10))
+	self.canvasRaster.refresh()
+	m.setCenter(QgsPoint(100,-100))
+	self.canvasRaster.refresh()
+
 	

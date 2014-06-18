@@ -114,7 +114,7 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadVectorImage(self):
-        self.vlayer = QgsVectorLayer("/home/felix/programming/HiBo-plugin/hibo/naturalearthdata/ne_10m_coastline/ne_10m_coastline.shp", "layer_name_you_like", "ogr")
+        self.vlayer = QgsVectorLayer("/home/felix/Downloads/packages/Natural_Earth_quick_start/110m_physical/ne_110m_coastline.shp", "layer_name_you_like", "ogr")
 	if not self.vlayer.isValid():
             print "Layer failed to load!"
 	self.vlayer.extent()

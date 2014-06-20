@@ -10,6 +10,7 @@ from PyQt4.QtGui import *
 from qgis import core, gui
 from qgis.core import *
 from qgis.gui import *
+from georef_hibo import georef
 
 
 try:
@@ -33,7 +34,6 @@ class Ui_hibo(QtGui.QDialog):
 	self.setupUi()
 	self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
 	self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), self.loadVectorImage)
-	self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
 	self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
 
         self.setWindowTitle(self.tr("HiBo"))
@@ -147,10 +147,6 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def selectPoints(self):
-	m = QgsVertexMarker(self.canvasRaster)
-	m.setCenter(QgsPoint(10,-10))
-	self.canvasRaster.refresh()
-	m.setCenter(QgsPoint(100,-100))
-	self.canvasRaster.refresh()
+	self.georef = georef()
 
 	

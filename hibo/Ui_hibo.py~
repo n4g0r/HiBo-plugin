@@ -11,6 +11,7 @@ from qgis import core, gui
 from qgis.core import *
 from qgis.gui import *
 from georef_hibo import georef
+from marking_hibo import marking
 
 
 try:
@@ -124,7 +125,6 @@ class Ui_hibo(QtGui.QDialog):
 	self.coastline_layer.extent()
 	layerlistv.append(self.coastline_layer)
 
-
 	self.admin0_layer = QgsVectorLayer("ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
 	if not self.admin0_layer.isValid():
             print "Layer failed to load!"
@@ -148,6 +148,9 @@ class Ui_hibo(QtGui.QDialog):
     @QtCore.pyqtSlot()
     def selectPoints(self):
 	self.georef = georef()
-	print georef
+	self.mark = marking(self)
+	self.canvasVector.setMapTool(self.mark, self.georef)
+	self.canvasRaster.setMapTool(self.mark, self.georef)
+	
 
 	

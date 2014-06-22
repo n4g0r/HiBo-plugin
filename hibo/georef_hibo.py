@@ -29,3 +29,6 @@ class georef(object):
             flipCanvas()
         else:
             print "error setoords"
+
+	def activeCanvas(self):
+		return self.__activeCanvas

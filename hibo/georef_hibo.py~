@@ -28,4 +28,4 @@ class georef(object):
             self.__tmpRaster = 0
             flipCanvas()
         else:
-            print "error flip_canvas"
+            print "error setoords"

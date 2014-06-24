@@ -1,15 +1,12 @@
 from PyQt4 import QtCore
 
-class georef(object):
+class georef():
 
     def __init__(self):
         self.__activeCanvas = 0
         self.__tmpRaster = QtCore.QPoint()
         self.__data = dict()
         print "object created"
-
-    def __del__(self):
-        print "deleted"
 
     def __flipCanvas(self):
         if self.__activeCanvas == 0:
@@ -32,3 +29,6 @@ class georef(object):
 
 	def activeCanvas(self):
 		return self.__activeCanvas
+
+    def __del__(self):
+        print "deleted"

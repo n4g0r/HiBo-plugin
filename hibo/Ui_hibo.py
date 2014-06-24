@@ -130,5 +130,5 @@ class Ui_hibo(QtGui.QDialog):
         self.georef = georef()
         print self.georef
         self.mark = marking(self, self.georef)
-        self.canvasVector.setMapTool(self.mark)
         self.canvasRaster.setMapTool(self.mark)
+        self.canvasVector.setMapTool(self.mark)

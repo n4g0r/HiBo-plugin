@@ -8,9 +8,9 @@ from georef_hibo import georef
 
 
 class marking(QgsMapToolEmitPoint):
-    def __init__(self, canvas, georef):
-        self.canvasVector = canvas.canvasVector
-        self.canvasRaster = canvas.canvasRaster
+    def __init__(self, ui, georef):
+        self.canvasVector = ui.canvasVector
+        self.canvasRaster = ui.canvasRaster
         self.georef = georef
         QgsMapToolEmitPoint.__init__(self, self.canvasVector)
         QgsMapToolEmitPoint.__init__(self, self.canvasRaster)
@@ -20,9 +20,9 @@ class marking(QgsMapToolEmitPoint):
 
     def canvasPressEvent(self, e):
         if self.georef.activeCanvas() == 0:
-            print self.georef
             print self.georef.activeCanvas()
             self.marker = QgsVertexMarker(self.canvasRaster)
+            self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
             self.georef.setCoords(e)
         elif self.georef.activeCanvas() == 1:
             print self.georef.activeCanvas()

@@ -27,6 +27,8 @@ import sys
 import os
 # Import the code for the dialog
 from Ui_hibo import Ui_hibo
+from georef_hibo import georef
+from marking_hibo import marking
 
 class hibo: 
 

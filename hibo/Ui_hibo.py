@@ -9,7 +9,8 @@ from qgis import core, gui
 from qgis.core import *
 from qgis.gui import *
 from georef_hibo import georef
-from marking_hibo import marking
+from markingVector_hibo import markingV
+from markingRaster_hibo import markingR
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -129,6 +130,7 @@ class Ui_hibo(QtGui.QDialog):
     def selectPoints(self):
         self.georef = georef()
         print self.georef
-        self.mark = marking(self, self.georef)
-        self.canvasRaster.setMapTool(self.mark)
-        self.canvasVector.setMapTool(self.mark)
+        self.markRaster = markingR(self, self.georef)
+        self.markVector = markingV(self, self.georef)
+        self.canvasRaster.setMapTool(self.markRaster)
+        self.canvasVector.setMapTool(self.markVector)

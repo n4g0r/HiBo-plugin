@@ -7,24 +7,20 @@ from qgis.gui import *
 from georef_hibo import georef
 
 
-class marking(QgsMapToolEmitPoint):
-    def __init__(self, canvas, georef):
-        self.canvasVector = canvas.canvasVector
-        self.canvasRaster = canvas.canvasRaster
+class markingV(QgsMapToolEmitPoint):
+    def __init__(self, ui, georef):
+        self.ui = ui
+        self.canvasVector = ui.canvasVector
         self.georef = georef
         QgsMapToolEmitPoint.__init__(self, self.canvasVector)
-        QgsMapToolEmitPoint.__init__(self, self.canvasRaster)
 
     def reset(self):    
         pass
 
     def canvasPressEvent(self, e):
         if self.georef.activeCanvas() == 0:
-            print self.georef.activeCanvas()
-            self.marker = QgsVertexMarker(self.canvasRaster)
-            self.georef.setCoords(e)
+            QtGui.QMessageBox.information(self.ui,"Information", "Please select a point on the left side first.")
         elif self.georef.activeCanvas() == 1:
-            print self.georef.activeCanvas()
             self.marker = QgsVertexMarker(self.canvasVector)    
             self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
             self.georef.setCoords(e)

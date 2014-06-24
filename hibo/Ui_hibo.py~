@@ -129,6 +129,7 @@ class Ui_hibo(QtGui.QDialog):
     def selectPoints(self):
         self.georef = georef()
         print self.georef
-        self.mark = marking(self, self.georef)
-        self.canvasVector.setMapTool(self.mark)
-        self.canvasRaster.setMapTool(self.mark)
+        self.markRaster = marking(self, self.georef)
+        self.markVector = marking(self, self.georef)
+        self.canvasRaster.setMapTool(self.markRaster)
+        self.canvasVector.setMapTool(self.markVector)

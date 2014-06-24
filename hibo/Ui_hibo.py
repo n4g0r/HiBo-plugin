@@ -109,20 +109,34 @@ class Ui_hibo(QtGui.QDialog):
             print "Layer failed to load!"
         self.coastline_layer.extent()
         layerlistv.append(self.coastline_layer)
+
         self.admin0_layer = QgsVectorLayer("ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
         if not self.admin0_layer.isValid():
             print "Layer failed to load!"
         self.admin0_layer.extent()
         layerlistv.append(self.admin0_layer)
+
         self.admin1_layer = QgsVectorLayer("ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
         if not self.admin1_layer.isValid():
             print "Layer failed to load!"
         self.admin1_layer.extent()
         layerlistv.append(self.admin1_layer)
+
+        self.lakes_layer = QgsVectorLayer("ned/ne_10m_lakes.shp", "lakes", "ogr")
+        if not self.lakes_layer.isValid():
+            print "Layer failed to load!"
+        self.lakes_layer.extent()
+        layerlistv.append(self.lakes_layer)
+
+        self.rivers_layer = QgsVectorLayer("ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
+        if not self.rivers_layer.isValid():
+            print "Layer failed to load!"
+        self.rivers_layer.extent()
+        layerlistv.append(self.rivers_layer)
+
         QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
         self.canvasVector.setExtent(self.coastline_layer.extent())
-        self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer)] )
-        #self.canvasVector.setCurrentLayer(self.vlayer)
+        self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
         self.canvasVector.setVisible(True)
         self.canvasVector.refresh()
 

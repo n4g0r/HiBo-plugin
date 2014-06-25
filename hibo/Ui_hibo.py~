@@ -76,7 +76,7 @@ class Ui_hibo(QtGui.QDialog):
         layoutVector.addWidget(self.canvasVector)
         layoutRaster.addWidget(self.toolbarRaster)
         layoutRaster.addWidget(self.canvasRaster)
-        layoutCentral = QtGui.QHBoxLayout(self)
+        layoutCentral = QtGui.QVBoxLayout(self)
         layoutCentral.addWidget(vectorarea)
         layoutCentral.addWidget(rasterarea) 
 
@@ -136,7 +136,7 @@ class Ui_hibo(QtGui.QDialog):
 
         QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
         self.canvasVector.setExtent(self.coastline_layer.extent())
-        self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.river_layer)] )
+        self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
         self.canvasVector.setVisible(True)
         self.canvasVector.refresh()
 

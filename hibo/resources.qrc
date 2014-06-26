@@ -4,7 +4,7 @@
     <file>zoomin.png</file>
     <file>zoomout.png</file>
     <file>move.png</file>
-    <file>move.png</file>
+    <file>load.png</file>
     <file>select.png</file>
   </qresource> 
 </RCC> 

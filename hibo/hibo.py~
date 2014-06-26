@@ -7,7 +7,6 @@ import sys
 import os
 from Ui_hibo import Ui_hibo
 from georef_hibo import georef
-from marking_hibo import marking
 
 class hibo: 
     def __init__(self, iface):

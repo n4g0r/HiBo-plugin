@@ -8,5 +8,6 @@
     <file>select.png</file>
     <file>calc.png</file>
     <file>back.png</file>
+    <file>rectangle.png</file>
   </qresource> 
 </RCC> 

@@ -11,6 +11,7 @@ from qgis.gui import *
 from georef_hibo import georef
 from markingVector_hibo import markingV
 from markingRaster_hibo import markingR
+from selectArea import RectangleMapTool
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -36,6 +37,7 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
         self.connect(self.calcRaster, QtCore.SIGNAL('triggered()'), self.calc)
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
+        self.connect(self.rectangle, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.setWindowTitle(self.tr("HiBo"))
 
     def setupUi(self):
@@ -90,9 +92,11 @@ class Ui_hibo(QtGui.QDialog):
         """toolbar step two"""
         self.toolbar  = QtGui.QToolBar('toolbar', self)
 
-        self.back   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/back.png"), 'zoominVector', self)
+        self.back        = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/back.png"), 'back', self)
+        self.rectangle   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/rectangle.png"), 'rect', self)
 
         self.toolbar.addAction(self.back)
+        self.toolbar.addAction(self.rectangle)
         
         """canvas step two"""
         self.canvas   = QgsMapCanvas()
@@ -189,3 +193,8 @@ class Ui_hibo(QtGui.QDialog):
     @QtCore.pyqtSlot()
     def backToSelection(self):
         self.layoutPipeline.setCurrentIndex(0)
+
+    @QtCore.pyqtSlot()
+    def selectArea(self):
+        self.selectAreaMT = RectangleMapTool(self)
+        self.canvas.setMapTool(self.selectAreaMT)

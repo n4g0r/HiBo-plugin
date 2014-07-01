@@ -104,31 +104,31 @@ class Ui_hibo(QtGui.QDialog):
     @QtCore.pyqtSlot()
     def loadVectorImage(self):
         layerlistv = []
-        self.coastline_layer = QgsVectorLayer("ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
+        self.coastline_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
         self.coastline_layer.extent()
         layerlistv.append(self.coastline_layer)
 
-        self.admin0_layer = QgsVectorLayer("ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
+        self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
         if not self.admin0_layer.isValid():
             print "Layer failed to load!"
         self.admin0_layer.extent()
         layerlistv.append(self.admin0_layer)
 
-        self.admin1_layer = QgsVectorLayer("ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
+        self.admin1_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
         if not self.admin1_layer.isValid():
             print "Layer failed to load!"
         self.admin1_layer.extent()
         layerlistv.append(self.admin1_layer)
 
-        self.lakes_layer = QgsVectorLayer("ned/ne_10m_lakes.shp", "lakes", "ogr")
+        self.lakes_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_lakes.shp", "lakes", "ogr")
         if not self.lakes_layer.isValid():
             print "Layer failed to load!"
         self.lakes_layer.extent()
         layerlistv.append(self.lakes_layer)
 
-        self.rivers_layer = QgsVectorLayer("ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
+        self.rivers_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
         if not self.rivers_layer.isValid():
             print "Layer failed to load!"
         self.rivers_layer.extent()

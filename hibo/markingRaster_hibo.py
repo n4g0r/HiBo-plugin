@@ -21,7 +21,7 @@ class markingR(QgsMapToolEmitPoint):
         if self.georef.activeCanvas() == 0:
             self.marker = QgsVertexMarker(self.canvasRaster)
             self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
-            self.georef.setCoords(e)
+            self.georef.setCoords(self.marker.toMapCoordinates(e.pos()))
         elif self.georef.activeCanvas() == 1:
             QtGui.QMessageBox.information(self.ui, "Information", "Please select a point on the left side first.")
 

@@ -34,10 +34,12 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
         self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), self.loadVectorImage)
         self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
+        self.connect(self.calcRaster, QtCore.SIGNAL('triggered()'), self.calc)
+        self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
         self.setWindowTitle(self.tr("HiBo"))
 
     def setupUi(self):
-        """setup for toolbar"""
+        """toolbar step one"""
         self.toolbarVector  = QtGui.QToolBar('vector', self)
         self.toolbarRaster  = QtGui.QToolBar('raster', self)
         self.zoominVector   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomin.png"), 'zoominVector', self)
@@ -48,7 +50,9 @@ class Ui_hibo(QtGui.QDialog):
         self.zoomoutRaster  = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomout.png"), 'zoomoutRaster', self)
         self.moveRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/move.png"), 'moveRaster', self)
         self.loadRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/load.png"), 'loadRaster', self)
-        self.selectRaster   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/select.png"), 'selectRaster', self)    
+        self.selectRaster   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/select.png"), 'selectRaster', self)
+        self.calcRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/calc.png"), 'calcRaster', self)
+    
         self.toolbarVector.addAction(self.loadVector)
         self.toolbarVector.addAction(self.zoominVector)
         self.toolbarVector.addAction(self.zoomoutVector)
@@ -58,14 +62,17 @@ class Ui_hibo(QtGui.QDialog):
         self.toolbarRaster.addAction(self.zoomoutRaster)
         self.toolbarRaster.addAction(self.moveRaster)
         self.toolbarRaster.addAction(self.selectRaster)
-        """setup for canvas"""
+        self.toolbarRaster.addAction(self.calcRaster)
+        
+        """canvas step one"""
         self.canvasVector   = QgsMapCanvas()
         self.canvasVector.setCanvasColor(Qt.white)
         self.canvasVector.enableAntiAliasing(True)
         self.canvasRaster   = QgsMapCanvas()
         self.canvasRaster.setCanvasColor(Qt.white)
         self.canvasRaster.enableAntiAliasing(True)
-        """layout"""
+
+        """layout step one"""
         vectorarea  = QtGui.QWidget()
         rasterarea  = QtGui.QWidget()
         layoutVector    = QtGui.QVBoxLayout()
@@ -76,9 +83,35 @@ class Ui_hibo(QtGui.QDialog):
         layoutVector.addWidget(self.canvasVector)
         layoutRaster.addWidget(self.toolbarRaster)
         layoutRaster.addWidget(self.canvasRaster)
-        layoutCentral = QtGui.QHBoxLayout(self)
+        layoutCentral = QtGui.QHBoxLayout()
         layoutCentral.addWidget(vectorarea)
-        layoutCentral.addWidget(rasterarea) 
+        layoutCentral.addWidget(rasterarea)
+
+        """toolbar step two"""
+        self.toolbar  = QtGui.QToolBar('toolbar', self)
+
+        self.back   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/back.png"), 'back', self)
+
+        self.toolbar.addAction(self.back)
+        
+        """canvas step two"""
+        self.canvas   = QgsMapCanvas()
+        self.canvas.setCanvasColor(Qt.white)
+        self.canvas.enableAntiAliasing(True)
+
+        """layout step two"""
+        layoutComputation = QtGui.QVBoxLayout()
+        layoutComputation.addWidget(self.toolbar)
+        layoutComputation.addWidget(self.canvas)
+
+        """layout pipeline"""
+        self.layoutPipeline = QtGui.QStackedLayout(self)
+        step_one = QtGui.QWidget()
+        step_one.setLayout(layoutCentral)
+        self.layoutPipeline.addWidget(step_one)
+        step_two = QtGui.QWidget()
+        step_two.setLayout(layoutComputation)
+        self.layoutPipeline.addWidget(step_two)
 
     def retranslateUi(self):
         self.setWindowTitle(_translate("hibo", "hibo", None))
@@ -148,3 +181,11 @@ class Ui_hibo(QtGui.QDialog):
         self.markVector = markingV(self, self.georef)
         self.canvasRaster.setMapTool(self.markRaster)
         self.canvasVector.setMapTool(self.markVector)
+
+    @QtCore.pyqtSlot()
+    def calc(self):
+        self.layoutPipeline.setCurrentIndex(1)
+
+    @QtCore.pyqtSlot()
+    def backToSelection(self):
+        self.layoutPipeline.setCurrentIndex(0)

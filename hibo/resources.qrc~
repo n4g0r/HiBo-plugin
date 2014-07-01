@@ -6,13 +6,6 @@
     <file>move.png</file>
     <file>load.png</file>
     <file>select.png</file>
+    <file>calc.png</file>
   </qresource> 
-  <qresource prefix="/ned" > 
-    <file>icon.png</file>
-    <file>zoomin.png</file>
-    <file>zoomout.png</file>
-    <file>move.png</file>
-    <file>load.png</file>
-    <file>select.png</file>
-  </qresource>
 </RCC> 

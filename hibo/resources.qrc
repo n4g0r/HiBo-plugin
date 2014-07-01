@@ -6,5 +6,7 @@
     <file>move.png</file>
     <file>load.png</file>
     <file>select.png</file>
+    <file>calc.png</file>
+    <file>back.png</file>
   </qresource> 
 </RCC> 

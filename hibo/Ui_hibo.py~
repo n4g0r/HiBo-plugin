@@ -197,4 +197,4 @@ class Ui_hibo(QtGui.QDialog):
     @QtCore.pyqtSlot()
     def selectArea(self):
         self.selectAreaMT = RectangleMapTool(self)
-        self.canvas.setMapTool(self.selectAreaMT)
+        self.canvasRaster.setMapTool(self.selectAreaMT)

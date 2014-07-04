@@ -14,7 +14,7 @@ class hibo:
         self.gui = Ui_hibo ()
 
     def initGui(self):  
-        self.action = QAction(QIcon(":/plugins/hibo/icons/hibo.png"), "HiBo", self.iface.mainWindow())
+        self.action = QAction(QIcon(":/icons/hibo.png"), "HiBo", self.iface.mainWindow())
         QObject.connect(self.action, SIGNAL("activated()"), self.run) 
         self.iface.addToolBarIcon(self.action)
         self.iface.addPluginToMenu("&HiBo", self.action)

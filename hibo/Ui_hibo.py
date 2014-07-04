@@ -39,6 +39,8 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
         self.connect(self.rectangle, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.setWindowTitle(self.tr("HiBo"))
+        self.rlayer_temp = QgsRasterLayer()
+        self.vlayer_temp = QgsVectorLayer()
 
     def setupUi(self):
         """toolbar step one"""
@@ -125,9 +127,11 @@ class Ui_hibo(QtGui.QDialog):
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
-        self.rlayer = QgsRasterLayer(fileName, baseName)
-        if not self.rlayer.isValid():
+        self.rlayer_temp = QgsRasterLayer(fileName, baseName)
+        if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
+            return
+        self.rlayer = self.rlayer_temp
         self.rlayer.extent()
         layerlistr = []
         layerlistr.append(self.rlayer)
@@ -145,6 +149,7 @@ class Ui_hibo(QtGui.QDialog):
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
         self.coastline_layer.extent()
+        self.coastline_layer.Color = Qt.green
         layerlistv.append(self.coastline_layer)
 
         self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
@@ -170,6 +175,8 @@ class Ui_hibo(QtGui.QDialog):
             print "Layer failed to load!"
         self.rivers_layer.extent()
         layerlistv.append(self.rivers_layer)
+
+        self.coastline_layer.Color = Qt.green
 
         QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
         self.canvasVector.setExtent(self.coastline_layer.extent())

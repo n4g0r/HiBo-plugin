@@ -39,21 +39,23 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
         self.connect(self.rectangle, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.setWindowTitle(self.tr("HiBo"))
+        self.rlayer_temp = QgsRasterLayer()
+        self.vlayer_temp = QgsVectorLayer()
 
     def setupUi(self):
         """toolbar step one"""
         self.toolbarVector  = QtGui.QToolBar('vector', self)
         self.toolbarRaster  = QtGui.QToolBar('raster', self)
-        self.zoominVector   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomin.png"), 'zoominVector', self)
-        self.zoomoutVector  = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomout.png"), 'zoomoutVector', self)
-        self.moveVector     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/move.png"), 'moveVector', self)
-        self.loadVector     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/load.png"), 'loadVector', self)
-        self.zoominRaster   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomin.png"), 'zoominRaster', self)
-        self.zoomoutRaster  = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/zoomout.png"), 'zoomoutRaster', self)
-        self.moveRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/move.png"), 'moveRaster', self)
-        self.loadRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/load.png"), 'loadRaster', self)
-        self.selectRaster   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/select.png"), 'selectRaster', self)
-        self.calcRaster     = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/calc.png"), 'calcRaster', self)
+        self.zoominVector   = QtGui.QAction(QtGui.QIcon(":/icons/zoomin.png"), 'zoominVector', self)
+        self.zoomoutVector  = QtGui.QAction(QtGui.QIcon(":/icons/zoomout.png"), 'zoomoutVector', self)
+        self.moveVector     = QtGui.QAction(QtGui.QIcon(":/icons/move.png"), 'moveVector', self)
+        self.loadVector     = QtGui.QAction(QtGui.QIcon(":/icons/load.png"), 'loadVector', self)
+        self.zoominRaster   = QtGui.QAction(QtGui.QIcon(":/icons/zoomin.png"), 'zoominRaster', self)
+        self.zoomoutRaster  = QtGui.QAction(QtGui.QIcon(":/icons/zoomout.png"), 'zoomoutRaster', self)
+        self.moveRaster     = QtGui.QAction(QtGui.QIcon(":/icons/move.png"), 'moveRaster', self)
+        self.loadRaster     = QtGui.QAction(QtGui.QIcon(":/icons/load.png"), 'loadRaster', self)
+        self.selectRaster   = QtGui.QAction(QtGui.QIcon(":/icons/select.png"), 'selectRaster', self)
+        self.calcRaster     = QtGui.QAction(QtGui.QIcon(":/icons/calc.png"), 'calcRaster', self)
     
         self.toolbarVector.addAction(self.loadVector)
         self.toolbarVector.addAction(self.zoominVector)
@@ -125,9 +127,11 @@ class Ui_hibo(QtGui.QDialog):
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
-        self.rlayer = QgsRasterLayer(fileName, baseName)
-        if not self.rlayer.isValid():
+        self.rlayer_temp = QgsRasterLayer(fileName, baseName)
+        if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
+            return
+        self.rlayer = rlayer_temp
         self.rlayer.extent()
         layerlistr = []
         layerlistr.append(self.rlayer)
@@ -145,6 +149,7 @@ class Ui_hibo(QtGui.QDialog):
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
         self.coastline_layer.extent()
+        self.coastline_layer.Color = Qt.green
         layerlistv.append(self.coastline_layer)
 
         self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
@@ -170,6 +175,8 @@ class Ui_hibo(QtGui.QDialog):
             print "Layer failed to load!"
         self.rivers_layer.extent()
         layerlistv.append(self.rivers_layer)
+
+        self.coastline_layer.Color = Qt.green
 
         QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
         self.canvasVector.setExtent(self.coastline_layer.extent())

@@ -130,12 +130,12 @@ class Ui_hibo(QtGui.QDialog):
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
-            return
+            return  
         self.rlayer = self.rlayer_temp
         self.rlayer.extent()
-        layerlistr = []
-        layerlistr.append(self.rlayer)
-        QgsMapLayerRegistry.instance().addMapLayers(layerlistr, False) 
+        self.layerlistr = []
+        self.layerlistr.append(self.rlayer)
+        QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
         self.canvasRaster.setExtent(self.rlayer.extent())
         self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
         self.canvasRaster.setCurrentLayer(self.rlayer)
@@ -144,45 +144,46 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadVectorImage(self):
-        layerlistv = []
+        self.layerlistv = []
         self.coastline_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
         self.coastline_layer.extent()
         self.coastline_layer.Color = Qt.green
-        layerlistv.append(self.coastline_layer)
+        self.layerlistv.append(self.coastline_layer)
 
         self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
         if not self.admin0_layer.isValid():
             print "Layer failed to load!"
         self.admin0_layer.extent()
-        layerlistv.append(self.admin0_layer)
+        self.layerlistv.append(self.admin0_layer)
 
         self.admin1_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
         if not self.admin1_layer.isValid():
             print "Layer failed to load!"
         self.admin1_layer.extent()
-        layerlistv.append(self.admin1_layer)
+        self.layerlistv.append(self.admin1_layer)
 
         self.lakes_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_lakes.shp", "lakes", "ogr")
         if not self.lakes_layer.isValid():
             print "Layer failed to load!"
         self.lakes_layer.extent()
-        layerlistv.append(self.lakes_layer)
+        self.layerlistv.append(self.lakes_layer)
 
         self.rivers_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
         if not self.rivers_layer.isValid():
             print "Layer failed to load!"
         self.rivers_layer.extent()
-        layerlistv.append(self.rivers_layer)
+        self.layerlistv.append(self.rivers_layer)
 
         self.coastline_layer.Color = Qt.green
 
-        QgsMapLayerRegistry.instance().addMapLayers(layerlistv, False) 
-        self.canvasVector.setExtent(self.coastline_layer.extent())
+        QgsMapLayerRegistry.instance().addMapLayers(self.layerlistv, False) 
         self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
+        self.canvasVector.setCurrentLayer(self.coastline_layer)
         self.canvasVector.setVisible(True)
         self.canvasVector.refresh()
+        self.canvasVector.zoomToFullExtent()
 
     @QtCore.pyqtSlot()
     def selectPoints(self):

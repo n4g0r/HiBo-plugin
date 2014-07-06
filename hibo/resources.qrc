@@ -10,5 +10,6 @@
     <file>icons/back.png</file>
     <file>icons/rectangle.png</file>
     <file>icons/hibo.png</file>
+    <file>icons/finish.png</file>
   </qresource> 
 </RCC> 

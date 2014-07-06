@@ -42,6 +42,7 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.calcRaster, QtCore.SIGNAL('triggered()'), self.calc)
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
         self.connect(self.rectRaster, QtCore.SIGNAL('triggered()'), self.selectArea)
+        self.connect(self.finish, QtCore.SIGNAL('triggered()'), self.end)
         self.setWindowTitle(self.tr("HiBo"))
         self.rlayer_temp = QgsRasterLayer()
         self.vlayer_temp = QgsVectorLayer()
@@ -102,8 +103,10 @@ class Ui_hibo(QtGui.QDialog):
         self.toolbar  = QtGui.QToolBar('toolbar', self)
 
         self.back        = QtGui.QAction(QtGui.QIcon(":/icons/back.png"), 'back', self)
+        self.finish      = QtGui.QAction(QtGui.QIcon(":/icons/finish.png"), 'back', self)
 
         self.toolbar.addAction(self.back)
+        self.toolbar.addAction(self.finish)
         
         """canvas step two"""
         self.canvas   = QgsMapCanvas()
@@ -129,11 +132,11 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        #fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
         fileInfo = QFileInfo(fileName)
-        baseName = fileInfo.baseName()
-        #baseName = 'map'
+        #baseName = fileInfo.baseName()
+        baseName = 'map'
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
@@ -233,6 +236,9 @@ class Ui_hibo(QtGui.QDialog):
         self.selectAreaMT = RectangleMapTool(self.canvasRaster)
         self.canvasRaster.setMapTool(self.selectAreaMT)
 
+    @QtCore.pyqtSlot()
+    def end(self):
+        pass
     
     def loadResultRasterImage(self, canvas):
         #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")

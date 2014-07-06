@@ -6,9 +6,9 @@ from qgis.core import *
 from qgis.gui import *
 
 class RectangleMapTool(QgsMapToolEmitPoint):
-  def __init__(self, ui):
+  def __init__(self, canvas):
       self.selectedArea=()
-      self.canvas = ui.canvasRaster
+      self.canvas = canvas
       QgsMapToolEmitPoint.__init__(self, self.canvas)
       self.rubberBand = QgsRubberBand(self.canvas, QGis.Polygon)
       self.rubberBand.setBrushStyle(Qt.NoBrush)

@@ -13,7 +13,7 @@ from markingVector_hibo import markingV
 from markingRaster_hibo import markingR
 from selectArea import RectangleMapTool
 from functools import partial
-import Image
+from PIL import Image
 
 
 
@@ -41,7 +41,7 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
         self.connect(self.calcRaster, QtCore.SIGNAL('triggered()'), self.calc)
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
-        self.connect(self.rectangle, QtCore.SIGNAL('triggered()'), self.selectArea)
+        self.connect(self.rectRaster, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.setWindowTitle(self.tr("HiBo"))
         self.rlayer_temp = QgsRasterLayer()
         self.vlayer_temp = QgsVectorLayer()
@@ -60,6 +60,8 @@ class Ui_hibo(QtGui.QDialog):
         self.loadRaster     = QtGui.QAction(QtGui.QIcon(":/icons/load.png"), 'loadRaster', self)
         self.selectRaster   = QtGui.QAction(QtGui.QIcon(":/icons/select.png"), 'selectRaster', self)
         self.calcRaster     = QtGui.QAction(QtGui.QIcon(":/icons/calc.png"), 'calcRaster', self)
+        self.rectRaster     = QtGui.QAction(QtGui.QIcon(":/icons/rectangle.png"), 'rect', self)
+        
     
         self.toolbarVector.addAction(self.loadVector)
         self.toolbarVector.addAction(self.zoominVector)
@@ -70,6 +72,7 @@ class Ui_hibo(QtGui.QDialog):
         self.toolbarRaster.addAction(self.zoomoutRaster)
         self.toolbarRaster.addAction(self.moveRaster)
         self.toolbarRaster.addAction(self.selectRaster)
+        self.toolbarRaster.addAction(self.rectRaster)
         self.toolbarRaster.addAction(self.calcRaster)
         
         """canvas step one"""
@@ -98,11 +101,9 @@ class Ui_hibo(QtGui.QDialog):
         """toolbar step two"""
         self.toolbar  = QtGui.QToolBar('toolbar', self)
 
-        self.back        = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/back.png"), 'back', self)
-        self.rectangle   = QtGui.QAction(QtGui.QIcon(":/plugins/hibo/icons/rectangle.png"), 'rect', self)
+        self.back        = QtGui.QAction(QtGui.QIcon(":/icons/back.png"), 'back', self)
 
         self.toolbar.addAction(self.back)
-        self.toolbar.addAction(self.rectangle)
         
         """canvas step two"""
         self.canvas   = QgsMapCanvas()
@@ -128,11 +129,11 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        #fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
         fileInfo = QFileInfo(fileName)
-        #baseName = fileInfo.baseName()
-        baseName = 'map'
+        baseName = fileInfo.baseName()
+        #baseName = 'map'
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
@@ -229,7 +230,7 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def selectArea(self):
-        self.selectAreaMT = RectangleMapTool(self)
+        self.selectAreaMT = RectangleMapTool(self.canvasRaster)
         self.canvasRaster.setMapTool(self.selectAreaMT)
 
     

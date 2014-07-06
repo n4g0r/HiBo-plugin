@@ -7,9 +7,11 @@ from qgis.gui import *
 
 class RectangleMapTool(QgsMapToolEmitPoint):
   def __init__(self, ui):
-      self.canvas = ui.canvas
+      self.selectedArea=()
+      self.canvas = ui.canvasRaster
       QgsMapToolEmitPoint.__init__(self, self.canvas)
       self.rubberBand = QgsRubberBand(self.canvas, QGis.Polygon)
+      self.rubberBand.setBrushStyle(Qt.NoBrush)
       self.rubberBand.setColor(Qt.red)
       self.rubberBand.setWidth(1)
       self.reset()
@@ -29,8 +31,12 @@ class RectangleMapTool(QgsMapToolEmitPoint):
       self.isEmittingPoint = False
       r = self.rectangle()
       if r is not None:
-        print "Rectangle:", r.xMin(), r.yMin(), r.xMax(), r.yMax()
-
+        print "Rectangle:", r.xMinimum(), r.yMinimum(), r.xMaximum(), r.yMaximum()
+        self.selectedArea=(r.xMinimum(), r.yMaximum(), r.xMaximum(), r.yMinimum())
+        print self.canvas.extent().toString()
+        self.canvas.setExtent(QgsRectangle (self.selectedArea[0], self.selectedArea[1], self.selectedArea[2], self.selectedArea[3]))
+        self.canvas.refresh()
+        print self.canvas.extent().toString()
   def canvasMoveEvent(self, e):
       if not self.isEmittingPoint:
         return
@@ -65,5 +71,9 @@ class RectangleMapTool(QgsMapToolEmitPoint):
   def deactivate(self):
       QgsMapTool.deactivate(self)
       self.emit(SIGNAL("deactivated()"))
+      
+  def getArea(self):
+      return self.selectedArea
+
 
 

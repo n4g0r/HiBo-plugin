@@ -28,7 +28,7 @@ class georef():
             self.__tmpRaster.isNull()
             self.__flipCanvas()
         else:
-            print "error setoords"
+            print "error setcoords"
         self.gimmeDemPoints()
 
     def activeCanvas(self):
@@ -38,5 +38,16 @@ class georef():
         print "deleted"
         
     def gimmeDemPoints(self):
-        print len(self.__data)
-        print self.__data
+        return len(self.__data)/4
+        
+    def calculateSomething(self,sAM):
+        print '# points: ', self.gimmeDemPoints()
+        for i in range(self.gimmeDemPoints()):
+            print i,': ',self.getPointPair(i)
+        print 'selected area: ', sAM.getArea()
+        
+        
+    
+    def getPointPair(self,i):
+        temp=(self.__data[1+2*i],self.__data[2+2*i])
+        return temp

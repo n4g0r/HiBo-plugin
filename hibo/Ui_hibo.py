@@ -12,6 +12,10 @@ from georef_hibo import georef
 from markingVector_hibo import markingV
 from markingRaster_hibo import markingR
 from selectArea import RectangleMapTool
+from functools import partial
+import Image
+
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -33,7 +37,7 @@ class Ui_hibo(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
         self.setupUi()
         self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
-        self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), self.loadVectorImage)
+        self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), partial(self.loadVectorImage, self.canvasVector))
         self.connect(self.selectRaster, QtCore.SIGNAL('triggered()'), self.selectPoints)
         self.connect(self.calcRaster, QtCore.SIGNAL('triggered()'), self.calc)
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
@@ -124,9 +128,11 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
         fileInfo = QFileInfo(fileName)
-        baseName = fileInfo.baseName()
+        #baseName = fileInfo.baseName()
+        baseName = 'map'
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
@@ -141,9 +147,10 @@ class Ui_hibo(QtGui.QDialog):
         self.canvasRaster.setCurrentLayer(self.rlayer)
         self.canvasRaster.setVisible(True)
         self.canvasRaster.refresh()
+        self.selectArea()#################################NASTY
 
     @QtCore.pyqtSlot()
-    def loadVectorImage(self):
+    def loadVectorImage(self,canvas):
         self.layerlistv = []
         self.coastline_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
         if not self.coastline_layer.isValid():
@@ -179,11 +186,11 @@ class Ui_hibo(QtGui.QDialog):
         self.coastline_layer.Color = Qt.green
 
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistv, False) 
-        self.canvasVector.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
-        self.canvasVector.setCurrentLayer(self.coastline_layer)
-        self.canvasVector.setVisible(True)
-        self.canvasVector.refresh()
-        self.canvasVector.zoomToFullExtent()
+        canvas.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
+        canvas.setCurrentLayer(self.coastline_layer)
+        canvas.setVisible(True)
+        canvas.refresh()
+        canvas.zoomToFullExtent()
 
     @QtCore.pyqtSlot()
     def selectPoints(self):
@@ -196,13 +203,64 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def calc(self):
-        self.layoutPipeline.setCurrentIndex(1)
+        #try:
+            if self.georef.gimmeDemPoints()>=4:
+                self.layoutPipeline.setCurrentIndex(1)
+                self.georef.calculateSomething(self.selectAreaMT)
+                self.loadVectorImage(self.canvas)
+                
+                #self.loadResultRasterImage(self.canvas)
+            else:
+                 QtGui.QMessageBox.information(self, "Information", "Please select at least 4 points.")
+                 return
+        #except AttributeError:
+             #QtGui.QMessageBox.information(self, "Information", "Please select at least 4 points.")
+             #return
+        
+        
+        
+        
+    
 
     @QtCore.pyqtSlot()
     def backToSelection(self):
         self.layoutPipeline.setCurrentIndex(0)
+        
 
     @QtCore.pyqtSlot()
     def selectArea(self):
         self.selectAreaMT = RectangleMapTool(self)
         self.canvasRaster.setMapTool(self.selectAreaMT)
+
+    
+    def loadResultRasterImage(self, canvas):
+        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        fileInfo = QFileInfo(fileName)
+        #baseName = fileInfo.baseName()
+        baseName = 'map'
+        im = Image.open(fileName)
+        im.show()
+        box=self.selectAreaMT.getArea()
+        fileNameOut='C:/Users/Freddy/HiBo-plugin/hibo/map2.bmp'
+        baseNameOut = 'map2'
+        box=(0,0,100,100)
+        im.crop(box)
+        im.save(fileNameOut,"BMP")
+        self.rlayer_temp = QgsRasterLayer(fileNameOut, baseNameOut)
+        if not self.rlayer_temp.isValid():
+            print "Layer failed to load!"
+            return  
+        self.rlayer = self.rlayer_temp
+        self.rlayer.extent()
+        #self.rlayer.setRenderer(QgsRasterRenderer().setOpacity(0.5))
+        self.rlayer.renderer().setOpacity(0.5)
+        self.layerlistr = []
+        self.layerlistr.append(self.rlayer)
+        QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
+        canvas.setExtent(self.rlayer.extent())
+        canvas.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
+        canvas.setCurrentLayer(self.rlayer)
+        canvas.setVisible(True)
+        canvas.refresh()
+

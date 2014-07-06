@@ -23,7 +23,7 @@ class markingV(QgsMapToolEmitPoint):
         elif self.georef.activeCanvas() == 1:
             self.marker = QgsVertexMarker(self.canvasVector)    
             self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
-            self.georef.setCoords(e)
+            self.georef.setCoords(self.marker.toMapCoordinates(e.pos()))
 
     def canvasReleaseEvent(self, e):
         pass

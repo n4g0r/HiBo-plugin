@@ -103,7 +103,7 @@ class Ui_hibo(QtGui.QDialog):
         self.toolbar  = QtGui.QToolBar('toolbar', self)
 
         self.back        = QtGui.QAction(QtGui.QIcon(":/icons/back.png"), 'back', self)
-        self.finish      = QtGui.QAction(QtGui.QIcon(":/icons/finish.png"), 'back', self)
+        self.finish      = QtGui.QAction(QtGui.QIcon(":/icons/finish.png"), 'finish', self)
 
         self.toolbar.addAction(self.back)
         self.toolbar.addAction(self.finish)

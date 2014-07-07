@@ -132,11 +132,11 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        #fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
+        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
         fileInfo = QFileInfo(fileName)
-        baseName = fileInfo.baseName()
-        #baseName = 'map'
+        #baseName = fileInfo.baseName()
+        baseName = 'map'
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"

@@ -13,7 +13,7 @@ from markingVector_hibo import markingV
 from markingRaster_hibo import markingR
 from selectArea import RectangleMapTool
 from functools import partial
-from PIL import Image
+
 
 vectorMapCanvasLayerList=[]
 
@@ -34,9 +34,7 @@ except AttributeError:
 
 class Ui_hibo(QtGui.QDialog):
     def __init__(self): 
-        QtGui.QDialog.__init__(self)
-        #QgsMapLayerRegistry.instance().removeAllMapLayers()
-        
+        QtGui.QDialog.__init__(self)  
         self.setupUi()
         self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
         self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), partial(self.loadVectorImage, self.canvasVector))
@@ -232,9 +230,7 @@ class Ui_hibo(QtGui.QDialog):
              #QtGui.QMessageBox.information(self, "Information", "Please select at least 4 points.")
              #return
         
-        
-        
-        
+
     
 
     @QtCore.pyqtSlot()
@@ -265,8 +261,7 @@ class Ui_hibo(QtGui.QDialog):
         if not self.rlayer2.isValid():
             print "Layer failed to load!"
             return  
-        
-        #self.rlayer2.setExtent((QgsRectangle (-3000,-850000,15000000,30000)))
+        self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
         self.layerlistr.append(self.rlayer2)
@@ -278,11 +273,9 @@ class Ui_hibo(QtGui.QDialog):
         canvas.setLayerSet( self.old_layers )
         canvas.setCurrentLayer(self.rlayer2)
         canvas.setVisible(True)
-        self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         canvas.setExtent(self.rlayer2.extent())
         canvas.zoomByFactor(1.5)
         canvas.refresh()
-        if hasattr(self.rlayer2, "setCacheImage"): self.rlayer2.setCacheImage(None)
-        self.rlayer2.triggerRepaint()
+
 
 

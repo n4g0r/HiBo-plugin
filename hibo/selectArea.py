@@ -31,10 +31,11 @@ class RectangleMapTool(QgsMapToolEmitPoint):
       self.isEmittingPoint = False
       r = self.rectangle()
       if r is not None:
-        print "Rectangle:", r.xMinimum(), r.yMinimum(), r.xMaximum(), r.yMaximum()
-        self.selectedArea=(r.xMinimum(), r.yMaximum(), r.xMaximum(), r.yMinimum())
+        print "(unrounded) Rectangle:", r.xMinimum(), r.yMaximum(), r.xMaximum(), r.yMinimum()
+        self.selectedArea=(round(r.xMinimum()), round(r.yMaximum()), round(r.xMaximum()), round(r.yMinimum()))
         print self.canvas.extent().toString()
         self.canvas.setExtent(QgsRectangle (self.selectedArea[0], self.selectedArea[1], self.selectedArea[2], self.selectedArea[3]))
+        self.canvas.zoomByFactor(1.1)
         self.canvas.refresh()
         print self.canvas.extent().toString()
   def canvasMoveEvent(self, e):

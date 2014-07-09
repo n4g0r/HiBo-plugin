@@ -1,4 +1,5 @@
 from PyQt4 import QtCore
+import subprocess
 
 
 class georef():
@@ -45,9 +46,10 @@ class georef():
         for i in range(self.gimmeDemPoints()):
             print i,': ',self.getPointPair(i)
         print 'selected area: ', sAM.getArea()
+        #cmd = "C:\\Users\\Freddy\\HiBo-plugin\\hibo\\test1.exe"
+        #process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        #process.wait()
         
-        
-    
     def getPointPair(self,i):
-        temp=(self.__data[1+2*i],self.__data[2+2*i])
+        temp=(self.__data[4*i],self.__data[1+4*i],self.__data[2+4*i],self.__data[3+4*i])
         return temp

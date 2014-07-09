@@ -15,7 +15,7 @@ from selectArea import RectangleMapTool
 from functools import partial
 from PIL import Image
 
-
+vectorMapCanvasLayerList=[]
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -35,6 +35,8 @@ except AttributeError:
 class Ui_hibo(QtGui.QDialog):
     def __init__(self): 
         QtGui.QDialog.__init__(self)
+        #QgsMapLayerRegistry.instance().removeAllMapLayers()
+        
         self.setupUi()
         self.connect(self.loadRaster, QtCore.SIGNAL('triggered()'), self.loadRasterImage)
         self.connect(self.loadVector, QtCore.SIGNAL('triggered()'), partial(self.loadVectorImage, self.canvasVector))
@@ -44,8 +46,7 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.rectRaster, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.connect(self.finish, QtCore.SIGNAL('triggered()'), self.end)
         self.setWindowTitle(self.tr("HiBo"))
-        self.rlayer_temp = QgsRasterLayer()
-        self.vlayer_temp = QgsVectorLayer()
+
 
     def setupUi(self):
         """toolbar step one"""
@@ -80,9 +81,11 @@ class Ui_hibo(QtGui.QDialog):
         self.canvasVector   = QgsMapCanvas()
         self.canvasVector.setCanvasColor(Qt.white)
         self.canvasVector.enableAntiAliasing(True)
+        self.canvasVector.show()
         self.canvasRaster   = QgsMapCanvas()
         self.canvasRaster.setCanvasColor(Qt.white)
         self.canvasRaster.enableAntiAliasing(True)
+        self.canvasRaster.show()
 
         """layout step one"""
         vectorarea  = QtGui.QWidget()
@@ -112,6 +115,8 @@ class Ui_hibo(QtGui.QDialog):
         self.canvas   = QgsMapCanvas()
         self.canvas.setCanvasColor(Qt.white)
         self.canvas.enableAntiAliasing(True)
+        self.canvas.freeze(True)
+
 
         """layout step two"""
         layoutComputation = QtGui.QVBoxLayout()
@@ -147,11 +152,13 @@ class Ui_hibo(QtGui.QDialog):
         self.layerlistr.append(self.rlayer)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
         self.canvasRaster.setExtent(self.rlayer.extent())
-        self.canvasRaster.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
+        self.canvasRaster.setLayerSet([QgsMapCanvasLayer(self.rlayer)])
         self.canvasRaster.setCurrentLayer(self.rlayer)
         self.canvasRaster.setVisible(True)
         self.canvasRaster.refresh()
+        self.canvasRaster.zoomToFullExtent()
         self.selectArea()#################################NASTY
+
 
     @QtCore.pyqtSlot()
     def loadVectorImage(self,canvas):
@@ -159,47 +166,43 @@ class Ui_hibo(QtGui.QDialog):
         self.coastline_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
-        self.coastline_layer.extent()
         self.coastline_layer.Color = Qt.green
         self.layerlistv.append(self.coastline_layer)
-
+        
         self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
         if not self.admin0_layer.isValid():
             print "Layer failed to load!"
-        self.admin0_layer.extent()
+        self.admin0_layer.Color = Qt.green
         self.layerlistv.append(self.admin0_layer)
 
         self.admin1_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
         if not self.admin1_layer.isValid():
             print "Layer failed to load!"
-        self.admin1_layer.extent()
+        self.admin1_layer.Color = Qt.green
         self.layerlistv.append(self.admin1_layer)
 
         self.lakes_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_lakes.shp", "lakes", "ogr")
         if not self.lakes_layer.isValid():
             print "Layer failed to load!"
-        self.lakes_layer.extent()
+        self.lakes_layer.Color = Qt.green
         self.layerlistv.append(self.lakes_layer)
 
         self.rivers_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
         if not self.rivers_layer.isValid():
             print "Layer failed to load!"
-        self.rivers_layer.extent()
+        self.rivers_layer.Color = Qt.green
         self.layerlistv.append(self.rivers_layer)
-
-        self.coastline_layer.Color = Qt.green
-
-        QgsMapLayerRegistry.instance().addMapLayers(self.layerlistv, False) 
-        canvas.setLayerSet( [ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)] )
+        global vectorMapCanvasLayerList
+        QgsMapLayerRegistry.instance().addMapLayers(self.layerlistv, False)
+        vectorMapCanvasLayerList=[ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)]
+        canvas.setLayerSet( vectorMapCanvasLayerList)
         canvas.setCurrentLayer(self.coastline_layer)
         canvas.setVisible(True)
-        canvas.refresh()
         canvas.zoomToFullExtent()
 
     @QtCore.pyqtSlot()
     def selectPoints(self):
         self.georef = georef()
-        print self.georef
         self.markRaster = markingR(self, self.georef)
         self.markVector = markingV(self, self.georef)
         self.canvasRaster.setMapTool(self.markRaster)
@@ -210,10 +213,18 @@ class Ui_hibo(QtGui.QDialog):
         #try:
             if self.georef.gimmeDemPoints()>=4:
                 self.layoutPipeline.setCurrentIndex(1)
+                self.canvas.show()
+                # Refresh the canvas content
+                self.canvas.refresh()
+                # Now, and only now, we can unfreeze
+                # the canvas
+                self.canvas.freeze(False)
+                # And finally, we can safely repaint it.
+                self.canvas.repaint()
                 self.georef.calculateSomething(self.selectAreaMT)
                 self.loadVectorImage(self.canvas)
                 
-                #self.loadResultRasterImage(self.canvas)
+                self.loadResultRasterImage(self.canvas)
             else:
                  QtGui.QMessageBox.information(self, "Information", "Please select at least 4 points.")
                  return
@@ -244,30 +255,34 @@ class Ui_hibo(QtGui.QDialog):
         #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
         fileInfo = QFileInfo(fileName)
-        #baseName = fileInfo.baseName()
-        baseName = 'map'
-        im = Image.open(fileName)
-        im.show()
+        baseName = fileInfo.baseName()
+        #baseName = 'map'
         box=self.selectAreaMT.getArea()
-        fileNameOut='C:/Users/Freddy/HiBo-plugin/hibo/map2.bmp'
-        baseNameOut = 'map2'
-        box=(0,0,100,100)
-        im.crop(box)
-        im.save(fileNameOut,"BMP")
-        self.rlayer_temp = QgsRasterLayer(fileNameOut, baseNameOut)
-        if not self.rlayer_temp.isValid():
+        fileNameOut='C:/Users/Freddy/Dropbox/Uni/Semester 6/Automated Image Processing of Historical Maps/su_matlab/tMap.jpg'
+        fileInfo = QFileInfo(fileNameOut)
+        baseNameOut = 'tMap'
+        self.rlayer2 = QgsRasterLayer(fileNameOut, baseNameOut)
+        if not self.rlayer2.isValid():
             print "Layer failed to load!"
             return  
-        self.rlayer = self.rlayer_temp
-        self.rlayer.extent()
-        #self.rlayer.setRenderer(QgsRasterRenderer().setOpacity(0.5))
-        self.rlayer.renderer().setOpacity(0.5)
+        
+        #self.rlayer2.setExtent((QgsRectangle (-3000,-850000,15000000,30000)))
+        self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
-        self.layerlistr.append(self.rlayer)
+        self.layerlistr.append(self.rlayer2)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
-        canvas.setExtent(self.rlayer.extent())
-        canvas.setLayerSet( [ QgsMapCanvasLayer(self.rlayer) ] )
-        canvas.setCurrentLayer(self.rlayer)
+        #canvas.setExtent(self.rlayer.extent())
+        self.old_layers=vectorMapCanvasLayerList
+        self.old_layers.append(QgsMapCanvasLayer(self.rlayer2))
+        print self.old_layers
+        canvas.setLayerSet( self.old_layers )
+        canvas.setCurrentLayer(self.rlayer2)
         canvas.setVisible(True)
+        self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
+        canvas.setExtent(self.rlayer2.extent())
+        canvas.zoomByFactor(1.5)
         canvas.refresh()
+        if hasattr(self.rlayer2, "setCacheImage"): self.rlayer2.setCacheImage(None)
+        self.rlayer2.triggerRepaint()
+
 

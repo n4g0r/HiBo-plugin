@@ -11,11 +11,14 @@ from qgis.gui import *
 from georef_hibo import georef
 from markingVector_hibo import markingV
 from markingRaster_hibo import markingR
+from clickingPoints_hibo import clickingP
 from selectArea import RectangleMapTool
 from functools import partial
+import subprocess
 
 
 vectorMapCanvasLayerList=[]
+saM=RectangleMapTool
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -129,6 +132,8 @@ class Ui_hibo(QtGui.QDialog):
         step_two = QtGui.QWidget()
         step_two.setLayout(layoutComputation)
         self.layoutPipeline.addWidget(step_two)
+        
+        self.georef = georef(self.layoutPipeline)
 
     def retranslateUi(self):
         self.setWindowTitle(_translate("hibo", "hibo", None))
@@ -200,7 +205,7 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def selectPoints(self):
-        self.georef = georef()
+        
         self.markRaster = markingR(self, self.georef)
         self.markVector = markingV(self, self.georef)
         self.canvasRaster.setMapTool(self.markRaster)
@@ -229,39 +234,63 @@ class Ui_hibo(QtGui.QDialog):
         #except AttributeError:
              #QtGui.QMessageBox.information(self, "Information", "Please select at least 4 points.")
              #return
-        
-
     
 
     @QtCore.pyqtSlot()
     def backToSelection(self):
-        self.layoutPipeline.setCurrentIndex(0)
-        
+        self.layoutPipeline.setCurrentIndex(0)       
 
     @QtCore.pyqtSlot()
     def selectArea(self):
+        global sam
         self.selectAreaMT = RectangleMapTool(self.canvasRaster)
+        sam=self.selectAreaMT
         self.canvasRaster.setMapTool(self.selectAreaMT)
 
     @QtCore.pyqtSlot()
     def end(self):
         pass
     
+    @QtCore.pyqtSlot()
     def loadResultRasterImage(self, canvas):
-        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
-        fileInfo = QFileInfo(fileName)
-        baseName = fileInfo.baseName()
-        #baseName = 'map'
+        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
+        first=0
+        matlab.append(str(first)) #0 for first step; 1 for first click and so on
+        matlab.append(str(sam.getArea()[0])) #xmin
+        matlab.append(str(sam.getArea()[1])) #ymax
+        matlab.append(str(sam.getArea()[2])) #xmax
+        matlab.append(str(sam.getArea()[3])) #ymin
+        matlab.append('200') #xclick
+        matlab.append('360') #yclick
+        for i in range(4):
+            matlab.append(str(self.georef.getPointPair(i)[0]))
+            matlab.append(str(self.georef.getPointPair(i)[1]))
+            matlab.append(str(self.georef.getPointPair(i)[2]))
+            matlab.append(str(self.georef.getPointPair(i)[3]))
+        matlab=subprocess.Popen(matlab)
+        matlab.wait()
+        
+        #s = QSettings()
+        #oldValidation = s.value( "/Projections/defaultBehaviour", "useGlobal" ).toString()
+        #s.setValue( "/Projections/defaultBehaviour", "useGlobal" )
+        
         box=self.selectAreaMT.getArea()
-        fileNameOut='C:/Users/Freddy/Dropbox/Uni/Semester 6/Automated Image Processing of Historical Maps/su_matlab/tMap.jpg'
+        fileNameOut='C:/matlabPython/transformedMap.bmp'
         fileInfo = QFileInfo(fileNameOut)
-        baseNameOut = 'tMap'
+        baseNameOut = 'transformedMap.bmp'
         self.rlayer2 = QgsRasterLayer(fileNameOut, baseNameOut)
         if not self.rlayer2.isValid():
             print "Layer failed to load!"
-            return  
-        self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
+            return
+        print canvas.mapRenderer().hasCrsTransformEnabled()   
+        crsfoo = QgsCoordinateReferenceSystem()
+        crsfoo.createFromProj4("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=962833.164567616 +y_0=7201716.45296303 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
+        #self.rlayer2.setCrs(crsfoo)
+        #QObject::connect( rlayer2, SIGNAL(repaintRequested()), mapCanvas, SLOT(refresh()) )
+        #self.connect(self.finish, QtCore.SIGNAL('triggered()'), self.end)
+        #s.setValue( "/Projections/defaultBehaviour", oldValidation )
+        
+        #self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
         self.layerlistr.append(self.rlayer2)
@@ -269,13 +298,15 @@ class Ui_hibo(QtGui.QDialog):
         #canvas.setExtent(self.rlayer.extent())
         self.old_layers=vectorMapCanvasLayerList
         self.old_layers.append(QgsMapCanvasLayer(self.rlayer2))
-        print self.old_layers
         canvas.setLayerSet( self.old_layers )
         canvas.setCurrentLayer(self.rlayer2)
         canvas.setVisible(True)
         canvas.setExtent(self.rlayer2.extent())
         canvas.zoomByFactor(1.5)
         canvas.refresh()
+        
+        self.clickClack = clickingP(self, self.layoutPipeline)
+        self.canvas.setMapTool(self.clickClack)
 
 
 

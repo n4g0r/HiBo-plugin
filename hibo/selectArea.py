@@ -7,7 +7,7 @@ from qgis.gui import *
 
 class RectangleMapTool(QgsMapToolEmitPoint):
   def __init__(self, canvas):
-      self.selectedArea=()
+      self.selectedArea=(1,-1,canvas.layer(0).width(),-canvas.layer(0).height())
       self.canvas = canvas
       QgsMapToolEmitPoint.__init__(self, self.canvas)
       self.rubberBand = QgsRubberBand(self.canvas, QGis.Polygon)
@@ -35,7 +35,7 @@ class RectangleMapTool(QgsMapToolEmitPoint):
         self.selectedArea=(round(r.xMinimum()), round(r.yMaximum()), round(r.xMaximum()), round(r.yMinimum()))
         print self.canvas.extent().toString()
         self.canvas.setExtent(QgsRectangle (self.selectedArea[0], self.selectedArea[1], self.selectedArea[2], self.selectedArea[3]))
-        self.canvas.zoomByFactor(1.1)
+        self.canvas.zoomByFactor(1.5)
         self.canvas.refresh()
         print self.canvas.extent().toString()
   def canvasMoveEvent(self, e):
@@ -74,7 +74,8 @@ class RectangleMapTool(QgsMapToolEmitPoint):
       self.emit(SIGNAL("deactivated()"))
       
   def getArea(self):
-      return self.selectedArea
+    print self.selectedArea
+    return self.selectedArea
 
 
 

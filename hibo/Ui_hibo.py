@@ -14,6 +14,15 @@ from markingRaster_hibo import markingR
 from clickingPoints_hibo import clickingP
 from selectArea import RectangleMapTool
 from functools import partial
+
+from osgeo import gdal
+from osgeo import ogr
+from osgeo import osr
+from osgeo import gdal_array
+from osgeo import gdalconst
+from gdalconst import *
+import struct
+
 import subprocess
 
 
@@ -141,7 +150,8 @@ class Ui_hibo(QtGui.QDialog):
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
         #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        #fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
+        fileName= os.path.dirname(__file__)+"/map.jpg"        
         fileInfo = QFileInfo(fileName)
         #baseName = fileInfo.baseName()
         baseName = 'map'
@@ -253,7 +263,7 @@ class Ui_hibo(QtGui.QDialog):
     
     @QtCore.pyqtSlot()
     def loadResultRasterImage(self, canvas):
-        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
+        """matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
         first=0
         matlab.append(str(first)) #0 for first step; 1 for first click and so on
         matlab.append(str(sam.getArea()[0])) #xmin
@@ -268,28 +278,25 @@ class Ui_hibo(QtGui.QDialog):
             matlab.append(str(self.georef.getPointPair(i)[2]))
             matlab.append(str(self.georef.getPointPair(i)[3]))
         matlab=subprocess.Popen(matlab)
-        matlab.wait()
+        matlab.wait()"""
         
         #s = QSettings()
         #oldValidation = s.value( "/Projections/defaultBehaviour", "useGlobal" ).toString()
         #s.setValue( "/Projections/defaultBehaviour", "useGlobal" )
         
         box=self.selectAreaMT.getArea()
-        fileNameOut='C:/matlabPython/transformedMap.bmp'
+        fileName2Transform= os.path.dirname(__file__)+"/Maps/tMap.jpg" 
+        self.transform(fileName2Transform,100.0,100.0)
+        fileNameOut= os.path.dirname(__file__)+"/Maps/outputMap.GTiff"
+        #fileNameOut='C:/matlabPython/transformedMap.bmp'
         fileInfo = QFileInfo(fileNameOut)
-        baseNameOut = 'transformedMap.bmp'
+        baseNameOut = fileInfo.baseName()
         self.rlayer2 = QgsRasterLayer(fileNameOut, baseNameOut)
         if not self.rlayer2.isValid():
             print "Layer failed to load!"
             return
-        print canvas.mapRenderer().hasCrsTransformEnabled()   
-        crsfoo = QgsCoordinateReferenceSystem()
-        crsfoo.createFromProj4("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=962833.164567616 +y_0=7201716.45296303 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs")
-        #self.rlayer2.setCrs(crsfoo)
-        #QObject::connect( rlayer2, SIGNAL(repaintRequested()), mapCanvas, SLOT(refresh()) )
-        #self.connect(self.finish, QtCore.SIGNAL('triggered()'), self.end)
-        #s.setValue( "/Projections/defaultBehaviour", oldValidation )
-        
+        print canvas.mapRenderer().hasCrsTransformEnabled()
+
         #self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
@@ -308,5 +315,55 @@ class Ui_hibo(QtGui.QDialog):
         self.clickClack = clickingP(self, self.layoutPipeline)
         self.canvas.setMapTool(self.clickClack)
 
+    def transform(self,fileIn,x,y):
+        """dataset = gdal.Open( fileIn, GA_ReadOnly )
+        if dataset is None:
+            print "can't open dataset" """
 
+        format = "GTiff"
+        driver = gdal.GetDriverByName( format )
+        metadata = driver.GetMetadata()
+        if metadata.has_key(gdal.DCAP_CREATE) and metadata[gdal.DCAP_CREATE] == 'YES':
+            print 'Driver %s supports Create() method.' % format
+        if metadata.has_key(gdal.DCAP_CREATECOPY) and metadata[gdal.DCAP_CREATECOPY] == 'YES':
+            print 'Driver %s supports CreateCopy() method.' % format
+
+        src_ds = gdal.Open(fileIn)
+        dst_filename = os.path.dirname(__file__)+"/Maps/outputMap.GTiff"  
+        dst_ds = driver.CreateCopy( dst_filename, src_ds, 0 )
+
+        self.info_dataset(dst_ds)
+        geotransform = dst_ds.GetGeoTransform()
+        dst_ds.SetGeoTransform([x,geotransform[1],geotransform[2],y,geotransform[4],geotransform[5]])
+        self.info_dataset(dst_ds)
+        
+
+    def info_dataset(self,dataset):
+        print 'Driver: ', dataset.GetDriver().ShortName,'/', dataset.GetDriver().LongName
+        print 'Size is ',dataset.RasterXSize,'x',dataset.RasterYSize, 'x',dataset.RasterCount
+        print 'Projection is ',dataset.GetProjection()
+    
+        geotransform = dataset.GetGeoTransform()
+        if not geotransform is None:
+            print 'Origin = (',geotransform[0], ',',geotransform[3],')'
+            print 'Pixel Size = (',geotransform[1], ',',geotransform[5],')'
+
+        """band = dataset.GetRasterBand(1)
+
+        print 'Band Type=',gdal.GetDataTypeName(band.DataType)
+
+        min = band.GetMinimum()
+        max = band.GetMaximum()
+        if min is None or max is None:
+            (min,max) = band.ComputeRasterMinMax(1)
+        print 'Min=%.3f, Max=%.3f' % (min,max)
+
+        if band.GetOverviewCount() > 0:
+            print 'Band has ', band.GetOverviewCount(), ' overviews.'
+
+        if not band.GetRasterColorTable() is None:
+            print 'Band has a color table with ', band.GetRasterColorTable().GetCount(), ' entries.'
+
+        scanline = band.ReadRaster( 0, 0, band.XSize, 1, band.XSize, 1, GDT_Float32 )
+        tuple_of_floats = struct.unpack('f' * band.XSize, scanline)"""
 

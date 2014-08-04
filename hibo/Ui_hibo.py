@@ -55,7 +55,7 @@ class Ui_hibo(QtGui.QDialog):
         self.connect(self.back, QtCore.SIGNAL('triggered()'), self.backToSelection)
         self.connect(self.rectRaster, QtCore.SIGNAL('triggered()'), self.selectArea)
         self.connect(self.finish, QtCore.SIGNAL('triggered()'), self.end)
-        self.setWindowTitle(self.tr("HiBo"))
+        self.setWindowTitle(self.tr("HiBo")) 
 
 
     def setupUi(self):
@@ -263,7 +263,7 @@ class Ui_hibo(QtGui.QDialog):
     
     @QtCore.pyqtSlot()
     def loadResultRasterImage(self, canvas):
-        """matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
+        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
         first=0
         matlab.append(str(first)) #0 for first step; 1 for first click and so on
         matlab.append(str(sam.getArea()[0])) #xmin
@@ -278,15 +278,16 @@ class Ui_hibo(QtGui.QDialog):
             matlab.append(str(self.georef.getPointPair(i)[2]))
             matlab.append(str(self.georef.getPointPair(i)[3]))
         matlab=subprocess.Popen(matlab)
-        matlab.wait()"""
+        matlab.wait()
         
-        #s = QSettings()
-        #oldValidation = s.value( "/Projections/defaultBehaviour", "useGlobal" ).toString()
-        #s.setValue( "/Projections/defaultBehaviour", "useGlobal" )
         
         box=self.selectAreaMT.getArea()
-        fileName2Transform= os.path.dirname(__file__)+"/Maps/tMap.jpg" 
-        self.transform(fileName2Transform,100.0,100.0)
+        #fileName2Transform= os.path.dirname(__file__)+"/Maps/tMap.jpg"
+        fileName2Transform= 'C:/matlabPython/transformedMap.bmp'
+        lines = [float(line.strip()) for line in open('C:/matlabPython/coords.txt')]
+        #self.transform(fileName2Transform,xmin962833.164567616,ymin7272856.86244419,1148186.8234847-962833.164567616,7272856.86244419-7201716.45296303)
+        print (lines)
+        self.transform(fileName2Transform,lines[0],lines[1],lines[2],lines[3])
         fileNameOut= os.path.dirname(__file__)+"/Maps/outputMap.GTiff"
         #fileNameOut='C:/matlabPython/transformedMap.bmp'
         fileInfo = QFileInfo(fileNameOut)
@@ -297,7 +298,7 @@ class Ui_hibo(QtGui.QDialog):
             return
         print canvas.mapRenderer().hasCrsTransformEnabled()
 
-        #self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
+        #testdata self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
         self.layerlistr.append(self.rlayer2)
@@ -315,7 +316,7 @@ class Ui_hibo(QtGui.QDialog):
         self.clickClack = clickingP(self, self.layoutPipeline)
         self.canvas.setMapTool(self.clickClack)
 
-    def transform(self,fileIn,x,y):
+    def transform(self,fileIn,x,y,xscale,yscale):
         """dataset = gdal.Open( fileIn, GA_ReadOnly )
         if dataset is None:
             print "can't open dataset" """
@@ -334,7 +335,7 @@ class Ui_hibo(QtGui.QDialog):
 
         self.info_dataset(dst_ds)
         geotransform = dst_ds.GetGeoTransform()
-        dst_ds.SetGeoTransform([x,geotransform[1],geotransform[2],y,geotransform[4],geotransform[5]])
+        dst_ds.SetGeoTransform([x,xscale/dst_ds.RasterXSize,geotransform[2],y,geotransform[4],yscale/dst_ds.RasterYSize])
         self.info_dataset(dst_ds)
         
 

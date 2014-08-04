@@ -23,6 +23,8 @@ class clickingP(QgsMapToolEmitPoint):
         if self.layoutPipeline.currentIndex()== 1:
             self.marker = QgsVertexMarker(self.canvas)
             self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
+            print self.marker.toMapCoordinates(e.pos()).x()#XOXOXOXO
+            print self.marker.toMapCoordinates(e.pos()).y()
             clicked_point=(self.marker.toMapCoordinates(e.pos()))
             matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
             matlab.append(str(self.counter)) #0 for first step; 1 for first click and so on

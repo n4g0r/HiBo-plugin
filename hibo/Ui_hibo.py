@@ -24,7 +24,7 @@ from gdalconst import *
 import struct
 
 import subprocess
-
+import reduce
 
 vectorMapCanvasLayerList=[]
 saM=RectangleMapTool
@@ -259,19 +259,43 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def end(self):
-        pass
+        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\matlab\\test1.exe']
+        matlab.append('-1') #0 for first step; 1 for first click and so on
+        for i in range(4):
+            matlab.append(str(0)) #xmin etc....
+        matlab.append('-1') #xclick
+        matlab.append('-1') #yclick
+        for i in range(4):
+            matlab.append(str(0))
+            matlab.append(str(0))
+            matlab.append(str(0))
+            matlab.append(str(0))
+        matlab=subprocess.Popen(matlab)
+        matlab.wait()
+        
+        lines = [float(line.strip()) for line in open('C:/matlabPython/polyline.txt')]
+
+        
+        crsSrc = QgsCoordinateReferenceSystem(3857)
+        crsDest = QgsCoordinateReferenceSystem(4326)  
+        xform = QgsCoordinateTransform(crsSrc, crsDest)
+        test_map=[]
+        for i in range(len(lines)/2):
+            pt = xform.transform(QgsPoint(lines[2*i],lines[2*i+1]))
+            test_map.append([pt.x(),pt.y()])
+        reduce.execute(test_map,"reducetest.geojson")
     
     @QtCore.pyqtSlot()
     def loadResultRasterImage(self, canvas):
-        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
+        matlab=['C:\\Users\\Freddy\\HiBo-plugin\\matlab\\test1.exe']
         first=0
         matlab.append(str(first)) #0 for first step; 1 for first click and so on
         matlab.append(str(sam.getArea()[0])) #xmin
         matlab.append(str(sam.getArea()[1])) #ymax
         matlab.append(str(sam.getArea()[2])) #xmax
         matlab.append(str(sam.getArea()[3])) #ymin
-        matlab.append('200') #xclick
-        matlab.append('360') #yclick
+        matlab.append('-1') #xclick
+        matlab.append('-1') #yclick
         for i in range(4):
             matlab.append(str(self.georef.getPointPair(i)[0]))
             matlab.append(str(self.georef.getPointPair(i)[1]))
@@ -285,7 +309,6 @@ class Ui_hibo(QtGui.QDialog):
         #fileName2Transform= os.path.dirname(__file__)+"/Maps/tMap.jpg"
         fileName2Transform= 'C:/matlabPython/transformedMap.bmp'
         lines = [float(line.strip()) for line in open('C:/matlabPython/coords.txt')]
-        #self.transform(fileName2Transform,xmin962833.164567616,ymin7272856.86244419,1148186.8234847-962833.164567616,7272856.86244419-7201716.45296303)
         print (lines)
         self.transform(fileName2Transform,lines[0],lines[1],lines[2],lines[3])
         fileNameOut= os.path.dirname(__file__)+"/Maps/outputMap.GTiff"
@@ -296,14 +319,10 @@ class Ui_hibo(QtGui.QDialog):
         if not self.rlayer2.isValid():
             print "Layer failed to load!"
             return
-        print canvas.mapRenderer().hasCrsTransformEnabled()
-
-        #testdata self.rlayer2.setExtent((QgsRectangle (962833.164567616,7201716.45296303,1148186.8234847,7272856.86244419)))
         self.rlayer2.renderer().setOpacity(0.5)
         self.layerlistr = []
         self.layerlistr.append(self.rlayer2)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
-        #canvas.setExtent(self.rlayer.extent())
         self.old_layers=vectorMapCanvasLayerList
         self.old_layers.append(QgsMapCanvasLayer(self.rlayer2))
         canvas.setLayerSet( self.old_layers )

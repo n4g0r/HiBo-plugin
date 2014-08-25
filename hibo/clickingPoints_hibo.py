@@ -26,7 +26,7 @@ class clickingP(QgsMapToolEmitPoint):
             print self.marker.toMapCoordinates(e.pos()).x()#XOXOXOXO
             print self.marker.toMapCoordinates(e.pos()).y()
             clicked_point=(self.marker.toMapCoordinates(e.pos()))
-            matlab=['C:\\Users\\Freddy\\HiBo-plugin\\test1.exe']
+            matlab=['C:\\Users\\Freddy\\HiBo-plugin\\matlab\\test1.exe']
             matlab.append(str(self.counter)) #0 for first step; 1 for first click and so on
             for i in range(4):
                 matlab.append(str(0)) #xmin etc....

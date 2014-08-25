@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="3478290979" file="C:\Users\Freddy\Dropbox\Uni\Semester 6\Automated Image Processing of Historical Maps\su_matlab\test1.prj" location="C:\Users\Freddy\Dropbox\Uni\Semester 6\Automated Image Processing of Historical Maps\su_matlab" name="test1" preferred-package-location="C:\Users\Freddy\Dropbox\Uni\Semester 6\Automated Image Processing of Historical Maps\su_matlab\test1\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
+  <configuration build-checksum="21864240" file="C:\Users\Freddy\HiBo-plugin\m-files\test1.prj" location="C:\Users\Freddy\HiBo-plugin\m-files" name="test1" preferred-package-location="C:\doentmatter" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
     <param.appname>test1</param.appname>
     <param.icon />
     <param.icons />
@@ -15,12 +15,12 @@
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.intermediate>C:\Users\Freddy\HiBo-plugin</param.intermediate>
-    <param.output>${PROJECT_ROOT}\test1\for_redistribution</param.output>
+    <param.intermediate>C:\Users\Freddy\HiBo-plugin\matlab</param.intermediate>
+    <param.output>C:\doentmatter</param.output>
     <param.user.defined.mcr.options />
     <param.embed.ctf>true</param.embed.ctf>
-    <param.server.ctf>C:\Users\Freddy\HiBo-plugin\.ctf</param.server.ctf>
-    <param.server.readme>C:\Users\Freddy\HiBo-plugin\readme.txt</param.server.readme>
+    <param.server.ctf>C:\Users\Freddy\HiBo-plugin\matlab\.ctf</param.server.ctf>
+    <param.server.readme>C:\Users\Freddy\HiBo-plugin\matlab\readme.txt</param.server.readme>
     <param.target.type>subtarget.standalone</param.target.type>
     <param.support.packages />
     <param.web.mcr>true</param.web.mcr>
@@ -47,7 +47,6 @@
       <param.installpath.combo />
       <param.logo />
       <param.install.notes />
-      <param.output />
       <param.user.defined.mcr.options />
       <param.embed.ctf />
       <param.server.ctf />
@@ -62,6 +61,7 @@
       <param.no.mcr.name />
       <param.windows.command.prompt />
       <param.create.log />
+      <param.log.file />
     </unset>
     <fileset.main>
       <file>${PROJECT_ROOT}\test1.m</file>
@@ -77,9 +77,9 @@
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\Freddy\HiBo-plugin" name="test1.exe" optional="false">C:\Users\Freddy\HiBo-plugin\test1.exe</file>
-      <file location="C:\Users\Freddy\HiBo-plugin" name="readme.txt" optional="true">C:\Users\Freddy\HiBo-plugin\readme.txt</file>
-      <file location="C:\Users\Freddy\HiBo-plugin" name="splash.png" optional="false">C:\Users\Freddy\HiBo-plugin\splash.png</file>
+      <file location="C:\Users\Freddy\HiBo-plugin\matlab" name="readme.txt" optional="true">C:\Users\Freddy\HiBo-plugin\matlab\readme.txt</file>
+      <file location="C:\Users\Freddy\HiBo-plugin\matlab" name="splash.png" optional="false">C:\Users\Freddy\HiBo-plugin\matlab\splash.png</file>
+      <file location="C:\Users\Freddy\HiBo-plugin\matlab" name="test1.exe" optional="false">C:\Users\Freddy\HiBo-plugin\matlab\test1.exe</file>
     </build-deliverables>
     <workflow />
     <matlab>

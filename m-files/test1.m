@@ -16,7 +16,7 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
          str2num(p1_4), str2num(p2_4),  str2num(p3_4),  str2num(p4_4);
      1,                 1,                   1,                  1    ]
     
-    global cannyMap border junctions
+    global cannyMap border junctions borderMap borderMapDone latest h  cropXmin cropYmax
     
     if (first==0)  
  %%%%%%%%%%%%%% read input and crop %%%%%%%%%%%
@@ -52,18 +52,19 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
         rightBorder=max(ne(1),se(1))
         upperBorder=min(nw(2),ne(2))
         lowerBorder=max(sw(2),se(2))
-        tfWidth=max(ne(1),se(1))-min(nw(1),se(1))
-        tfHeight=max(nw(2),ne(2))-min(sw(2),se(2))
+        tfWidth=rightBorder-leftBorder
+        tfHeight=upperBorder-lowerBorder
         tfWdelta=tfWidth/cropWidth
         tfHdelta=tfHeight/cropHeight
-        save ('C:/matlabPython/data.mat','tfWdelta','tfHdelta','cropWidth','cropHeight','leftBorder','upperBorder','h')
- %%%%%%%%%%%%%%% transform init %%%%%%%%%%%%%%%%%%% 
+        save ('C:/matlabPython/data.mat','tfWdelta','tfHdelta','cropWidth','cropHeight','leftBorder','upperBorder','h', 'cropXmin', 'cropYmax')
+        %%%%%%%%%%%%%%% transform init %%%%%%%%%%%%%%%%%%% 
         pos=[0;0;1];
-        transformedMap=zeros(cropHeight, cropWidth);
-
-        for i=(1:cropHeight)
+        transformedMap=zeros(cropHeight+1, cropWidth+1);
+        cropPos=h*[cropXmin;cropYmax;1]
+        cropPos=cropPos/cropPos(3)
+        for i=(1:cropHeight+1)
             pos(2)=upperBorder-i*tfHdelta;
-            for j= (1:cropWidth)
+            for j= (1:cropWidth+1)
                 pos(1)=leftBorder+j*tfWdelta;
                 proPos=h\pos;
                 proPos=proPos/proPos(3);
@@ -71,10 +72,30 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
             end
         end
         imwrite(transformedMap,'C:/matlabPython/transformedMap.bmp');
-        
+        save ('C:/matlabPython/debug1.mat')
         fileID = fopen('C:/matlabPython/coords.txt','w');
-        fprintf(fileID,[num2str(nw(1)),'\n',num2str(nw(2)),'\n',num2str(tfWidth),'\n',num2str(tfHeight)]);
+        fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n',num2str(tfWidth),'\n',num2str(tfHeight)]);
         fclose(fileID);
+        
+    elseif (first==-1)
+        load 'C:/matlabPython/data.mat'
+        borderMap = imread('C:/matlabPython/border3.bmp'); 
+        i=1
+        while (borderMap(i)==0)
+            i=i+1
+        end
+        row=mod(i,size(borderMap,1)) %column
+        column=idivide(int32(i), size(borderMap,1), 'ceil')
+        borderMap(row, column);
+        borderMapDone=zeros(size(borderMap));
+        fileID = fopen('C:/matlabPython/polyline.txt','w');
+        traceBorder(row,column,fileID);
+        fclose(fileID);
+        borderMapDone=zeros(size(borderMap));
+        fileID = fopen('C:/matlabPython/polyline.txt','w');
+        traceBorder(latest(1),latest(2),fileID)
+        fclose(fileID);
+        
         
     else
     %%%%%%%%%%%%%%% tracing %%%%%%%%%%%%%%%%%%% 
@@ -98,18 +119,17 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
         fprintf(fileID,[num2str(x),'\n',num2str(y)]);
         fclose(fileID);
         xy=inv(h)*[x;y;1]
+        xy=xy/xy(3);
         x=xy(1)
         y=xy(2)
         fileID = fopen('C:/matlabPython/debug1.txt','w');
         fprintf(fileID,[num2str(x),'\n',num2str(y)]);
         fclose(fileID);
-        y=-y-cropYmax
-        x=x-cropXmin
+        y=round(-y+cropYmax)
+        x=round(x-cropXmin)
         fileID = fopen('C:/matlabPython/debug2.txt','w');
         fprintf(fileID,[num2str(x),'\n',num2str(y)]);
         fclose(fileID);
-        x=round(x);
-        y=round(y);
         xnew=0;
         ynew=0;
         if(cannyMap(y,x))
@@ -174,6 +194,7 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
             end
         end
         imwrite(border,strcat('C:/matlabPython/border',int2str(first),'.bmp'))
+        border=abs(border-1);
         transformedBorder=zeros(cropHeight, cropWidth);
         pos=[0;0;1];
         for i=(1:size(border,1))
@@ -185,7 +206,8 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
                 transformedBorder(i,j)=interpImg(border,[proPos(2)+cropYmax, proPos(1)-cropXmin]);
             end
         end
-        imwrite(transformedBorder,'C:/matlabPython/transformedMap.bmp');
+        imwrite(transformedBorder,'C:/matlabPython/transformedBorder.bmp');
+        save ('C:/matlabPython/debug1.mat')
     end
 end
 
@@ -295,6 +317,93 @@ function trace(y,x)
                 border(y,x-1)=1;
                 trace(y,x-1);
             end
+        end
+    end
+end
+
+
+
+function res=traceBorder(y,x,fileID)
+    global borderMap borderMapDone latest h cropXmin cropYmax
+    stepsToGo=1;
+    contourFound=false;
+    if(borderMap(y,x)&&borderMapDone(y,x)==0)
+        res=[y,x];
+        latest=[y,x];
+        cropPos=h*[cropXmin+double(x);cropYmax-double(y);1]
+        cropPos=cropPos/cropPos(3)
+        fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n']);
+        borderMapDone(y,x)=1;
+        traceBorder(y,x,fileID);
+    else
+        while stepsToGo<=21 && contourFound==false%stop at distance of 10(10*2+1)
+            for i=1:stepsToGo
+                y=y+1;
+                if (borderMap(y,x)&&borderMapDone(y,x)==0)
+                    res=[y,x];
+                    latest=[y,x];
+                    cropPos=h*[cropXmin+double(x);cropYmax-double(y);1];
+                    cropPos=cropPos/cropPos(3);
+                    fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n']);
+                    contourFound=true;
+                    borderMapDone(y,x)=1;
+                    traceBorder(y,x,fileID);
+                    break
+                end
+            end
+            if contourFound
+                break
+            end
+            for i=1:stepsToGo
+                x=x+1;
+                if (borderMap(y,x)&&borderMapDone(y,x)==0)
+                    res=[y,x];
+                    latest=[y,x];
+                    cropPos=h*[cropXmin+double(x);cropYmax-double(y);1];
+                    cropPos=cropPos/cropPos(3);
+                    fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n']);
+                    contourFound=true;
+                    borderMapDone(y,x)=1;
+                    traceBorder(y,x,fileID);
+                    break
+                end
+            end
+            if contourFound
+                break
+            end
+            stepsToGo=stepsToGo+1;
+            for i=1:stepsToGo
+                y=y-1;
+                if (borderMap(y,x)&&borderMapDone(y,x)==0)
+                    res=[y,x];
+                    latest=[y,x];
+                    cropPos=h*[cropXmin+double(x);cropYmax-double(y);1];
+                    cropPos=cropPos/cropPos(3);
+                    fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n']);
+                    contourFound=true;
+                    borderMapDone(y,x)=1;
+                    traceBorder(y,x,fileID);
+                    break
+                end
+            end
+            if contourFound
+                break
+            end
+            for i=1:stepsToGo
+                x=x-1;
+                if (borderMap(y,x)&&borderMapDone(y,x)==0)
+                    res=[y,x];
+                    latest=[y,x];
+                    cropPos=h*[cropXmin+double(x);cropYmax-double(y);1];
+                    cropPos=cropPos/cropPos(3);
+                    fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n']);
+                    contourFound=true;
+                    borderMapDone(y,x)=1;
+                    traceBorder(y,x,fileID);
+                    break
+                end
+            end
+            stepsToGo=stepsToGo+1;
         end
     end
 end

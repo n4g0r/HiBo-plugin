@@ -1,0 +1,42 @@
+ant:
+<ant>
+  <mkdir dir="C:\doentmatter" />
+  <mkdir dir="C:\Users\Freddy\HiBo-plugin\matlab" />
+</ant>
+mcc -C -o test1 -W WinMain:test1 -T link:exe -d C:\Users\Freddy\HiBo-plugin\matlab -v C:\Users\Freddy\HiBo-plugin\m-files\test1.m 
+Compiler version: 5.1 (R2014a)
+Dependency analysis by REQUIREMENTS.
+[Warning: Adding path "C:\Users\Freddy\HiBo-plugin\m-files" to Compiler path
+instance.] 
+Parsing file "C:\Users\Freddy\HiBo-plugin\m-files\test1.m"
+	(Referenced from: "Compiler Command Line").
+Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\deployprint.m"
+	(Referenced from: "Compiler Command Line").
+Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\printdlg.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 17 temporary MEX authorization files.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_3409_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_11503_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_32552_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_2352_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_27950_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_28257_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_2287_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_11712_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_13579_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_1118_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_21372_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_10448_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_13049_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_16260_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_31876_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_12946_6920.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_6920_19051_6920.auth'.
+Generating file "C:\Users\Freddy\HiBo-plugin\matlab\readme.txt".
+Packaging...
+Adding custom icon C:\Program Files\MATLAB\R2014a\toolbox\compiler\Resources\default_icon.ico to C:\Users\Freddy\HiBo-plugin\matlab\test1.exe.
+Attempting to embed the CTF archive into the application C:\Users\Freddy\HiBo-plugin\matlab\test1.exe.
+Finished embedding CTF archive. Deleting the external CTF archive.
+Creating the bundle...
+Web based installer created at C:\doentmatter\MyAppInstaller_web.exe.
+Packaging complete.

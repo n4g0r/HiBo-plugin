@@ -11,8 +11,8 @@ end = "} }\n]\n}"
 def execute(reduce_map,path):
 
    print "number before reducing: " + str(len(reduce_map))
-   print "number after  reducing: " + str(len(rdp(reduce_map, epsilon=0.0001)))
-   write(rdp(reduce_map, epsilon=0.0001),path)
+   print "number after  reducing: " + str(len(rdp(reduce_map, epsilon=0.001)))
+   write(rdp(reduce_map, epsilon=0.001),path)
 
 def write(reduced_map,path):
 

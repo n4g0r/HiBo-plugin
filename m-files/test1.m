@@ -77,9 +77,9 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
         fprintf(fileID,[num2str(cropPos(1)),'\n',num2str(cropPos(2)),'\n',num2str(tfWidth),'\n',num2str(tfHeight)]);
         fclose(fileID);
         
-    elseif (first==-1)
+    elseif (first<=-1)
         load 'C:/matlabPython/data.mat'
-        borderMap = imread('C:/matlabPython/border3.bmp'); 
+        borderMap = imread(strcat('C:/matlabPython/border',int2str(abs(first+1)),'.bmp')); 
         i=1
         while (borderMap(i)==0)
             i=i+1

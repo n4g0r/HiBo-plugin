@@ -182,31 +182,51 @@ class Ui_hibo(QtGui.QDialog):
         self.coastline_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/10m_physical/ne_10m_coastline.shp", "coastlines", "ogr")
         if not self.coastline_layer.isValid():
             print "Layer failed to load!"
-        self.coastline_layer.Color = Qt.green
+
+        symbols = self.coastline_layer.rendererV2().symbols()
+        symbol = symbols[0]
+        symbol.setColor(QColor.fromRgb(139,69,19))
+
         self.layerlistv.append(self.coastline_layer)
         
         self.admin0_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_0_boundary_lines_land.shp", "admin0", "ogr")
         if not self.admin0_layer.isValid():
             print "Layer failed to load!"
-        self.admin0_layer.Color = Qt.green
+
+        symbols = self.admin0_layer.rendererV2().symbols()
+        symbol = symbols[0]
+        symbol.setColor(QColor.fromRgb(255,0,0))
+
         self.layerlistv.append(self.admin0_layer)
 
         self.admin1_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_admin_1_states_provinces_lines_shp.shp", "admin1", "ogr")
         if not self.admin1_layer.isValid():
             print "Layer failed to load!"
-        self.admin1_layer.Color = Qt.green
+
+        symbols = self.admin1_layer.rendererV2().symbols()
+        symbol = symbols[0]
+        symbol.setColor(QColor.fromRgb(0,200,0))
+
         self.layerlistv.append(self.admin1_layer)
 
         self.lakes_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_lakes.shp", "lakes", "ogr")
         if not self.lakes_layer.isValid():
             print "Layer failed to load!"
-        self.lakes_layer.Color = Qt.green
+
+        symbols = self.lakes_layer.rendererV2().symbols()
+        symbol = symbols[0]
+        symbol.setColor(QColor.fromRgb(0,0,125))
+
         self.layerlistv.append(self.lakes_layer)
 
         self.rivers_layer = QgsVectorLayer(os.path.dirname(__file__)+"/ned/ne_10m_rivers_lake_centerlines_scale_rank.shp", "rivers", "ogr")
         if not self.rivers_layer.isValid():
             print "Layer failed to load!"
-        self.rivers_layer.Color = Qt.green
+
+        symbols = self.rivers_layer.rendererV2().symbols()
+        symbol = symbols[0]
+        symbol.setColor(QColor.fromRgb(0,0,255))
+
         self.layerlistv.append(self.rivers_layer)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistv, False)
         self.vectorMapCanvasLayerList=[ QgsMapCanvasLayer(self.coastline_layer), QgsMapCanvasLayer(self.admin0_layer), QgsMapCanvasLayer(self.admin1_layer), QgsMapCanvasLayer(self.lakes_layer), QgsMapCanvasLayer(self.rivers_layer)]

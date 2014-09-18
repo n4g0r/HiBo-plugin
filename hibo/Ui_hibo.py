@@ -152,16 +152,20 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
-        #fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
-        #fileName='C:/Users/Freddy/HiBo-plugin/hibo/map.jpg'
-        fileName= os.path.dirname(__file__)+"/map.jpg"        
+        s = QSettings()
+        oldValidation = s.value( "/Projections/defaultBehaviour", "useGlobal" )
+        s.setValue( "/Projections/defaultBehaviour", "useGlobal" )
+
+        fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
-        #baseName = fileInfo.baseName()
-        baseName = 'map'
+        baseName = fileInfo.baseName()
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
+
+        self.rlayer_temp.setCrs( QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId) )
+        s.setValue( "/Projections/defaultBehaviour", oldValidation )
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
-            return  
+            return
         self.rlayer = self.rlayer_temp
         self.rlayer.extent()
         self.layerlistr = []

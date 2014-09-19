@@ -160,8 +160,6 @@ class Ui_hibo(QtGui.QDialog):
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
         self.rlayer_temp = QgsRasterLayer(fileName, baseName)
-
-        self.rlayer_temp.setCrs( QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId) )
         s.setValue( "/Projections/defaultBehaviour", oldValidation )
         if not self.rlayer_temp.isValid():
             print "Layer failed to load!"
@@ -171,11 +169,8 @@ class Ui_hibo(QtGui.QDialog):
         self.layerlistr = []
         self.layerlistr.append(self.rlayer)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
-        self.canvasRaster.setExtent(self.rlayer.extent())
         self.canvasRaster.setLayerSet([QgsMapCanvasLayer(self.rlayer)])
         self.canvasRaster.setCurrentLayer(self.rlayer)
-        self.canvasRaster.setVisible(True)
-        self.canvasRaster.refresh()
         self.canvasRaster.zoomToFullExtent()
         self.selectArea()#################################NASTY
 
@@ -325,6 +320,12 @@ class Ui_hibo(QtGui.QDialog):
             matlab.append(str(self.georef.getPointPair(i)[1]))
             matlab.append(str(self.georef.getPointPair(i)[2]))
             matlab.append(str(self.georef.getPointPair(i)[3]))
+            
+        fobj = open('C:/matlabPython/points.txt', "w") 
+        fobj.write(str(self.georef.getPointPair(0)))
+        fobj.write(str(self.georef.getPointPair(1))) 
+        fobj.close()
+        
         matlab=subprocess.Popen(matlab)
         matlab.wait()
     

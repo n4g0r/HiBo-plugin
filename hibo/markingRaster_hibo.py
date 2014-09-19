@@ -11,6 +11,7 @@ class markingR(QgsMapToolEmitPoint):
     def __init__(self, ui, georef):
         self.ui = ui
         self.canvasRaster = ui.canvasRaster
+        self.canvasVector = ui.canvasVector
         self.georef = georef
         QgsMapToolEmitPoint.__init__(self, self.canvasRaster)
 
@@ -28,8 +29,13 @@ class markingR(QgsMapToolEmitPoint):
     def canvasReleaseEvent(self, e):
         pass
 
-    def canvasMoveEvent(self, e):
-        pass
+    def canvasMoveEvent(self, e): 
+        self.markerR = QgsVertexMarker(self.canvasRaster)
+        self.markerV = QgsVertexMarker(self.canvasVector)
+        self.markerV.setColor(QtGui.QColor(0, 255, 0, 127))
+        value = self.georef.checkCoordsR(self.markerR.toMapCoordinates(e.pos()))
+        if value != QgsPoint(0,0):
+             self.markerV.setCenter(value)
 
     def showRect(self, startPoint, endPoint):
         pass

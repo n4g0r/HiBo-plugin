@@ -39,30 +39,6 @@ class georef():
             else:
                 print "error setcoords"
             self.gimmeDemPoints()
-    
-    def checkCoordsR(self, point, marker):
-        eps = 10
-        print "length: ",len(self.__data)
-        if len(self.__data) > 0:
-            for i in range(len(self.__data)/4):
-                print "i: ",i,"data : ", self.__data[int(i*4)],"," ,self.__data[int(i*4+1)], " point:  ", point.x(),",",point.y()         
-                if self.__data[int(i*4)] - eps <= point.x() and self.__data[int(i*4)] + eps >= point.x() and self.__data[int(i*4+1)] - eps <= point.y() and self.__data[int(i*4+1)] + eps >= point.y():
-                    marker.setColor(QtGui.QColor(0, 255, 0, 125))
-                    marker.setCenter(QgsPoint(self.__data[int(i*4+2)],self.__data[int(i*4+3)]))
-                else:
-                    marker.setColor(QtGui.QColor(0, 0, 255, 125))
-                    marker.setCenter(QgsPoint(self.__data[int(i*4+2)],self.__data[int(i*4+3)]))
-
-    def checkCoordsV(self, point):
-        eps = 0.000001
-        print "length: ",len(self.__data)
-        if len(self.__data) > 0:
-            for i in range(len(self.__data)/4):
-                print "data : ", self.__data[int(i*4+2)],"," ,self.__data[int(i*4+3)], " point:  ", point.x(),",",point.y()         
-                if self.__data[int(i*4+2)] - eps <= point.x() and self.__data[int(i*4+2)] + eps >= point.x() and self.__data[int(i*4+3)] - eps <= point.y() and self.__data[int(i*4+3)] + eps >= point.y():
-                   return QgsPoint(self.__data[int(i*4)],self.__data[int(i*4+1)])
-                   print "treffer"
-        return False
 
     def activeCanvas(self):
         return self.__activeCanvas

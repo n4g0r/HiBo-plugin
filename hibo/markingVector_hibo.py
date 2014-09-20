@@ -34,7 +34,7 @@ class markingV(QgsMapToolEmitPoint):
         self.markerR = QgsVertexMarker(self.canvasRaster)
         self.markerR.setColor(QtGui.QColor(0, 255, 0, 127))
         value = self.georef.checkCoordsV(self.markerV.toMapCoordinates(e.pos()))
-        if value != QgsPoint(0,0):
+        if value != False:
              self.markerR.setCenter(value)
 
     def showRect(self, startPoint, endPoint):

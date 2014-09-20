@@ -32,10 +32,7 @@ class markingR(QgsMapToolEmitPoint):
     def canvasMoveEvent(self, e): 
         self.markerR = QgsVertexMarker(self.canvasRaster)
         self.markerV = QgsVertexMarker(self.canvasVector)
-        self.markerV.setColor(QtGui.QColor(0, 255, 0, 127))
-        value = self.georef.checkCoordsR(self.markerR.toMapCoordinates(e.pos()))
-        if value != QgsPoint(0,0):
-             self.markerV.setCenter(value)
+        self.georef.checkCoordsR(self.markerR.toMapCoordinates(e.pos()),self.markerV)
 
     def showRect(self, startPoint, endPoint):
         pass

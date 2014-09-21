@@ -30,6 +30,7 @@ import reduce
 saM=RectangleMapTool
 
 
+
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -59,6 +60,7 @@ class Ui_hibo(QtGui.QDialog):
         self.setWindowTitle(self.tr("HiBo"))
         self.vectorMapCanvasLayerList=[]
         self.clickClack=clickingP
+        self.ended=False
 
 
     def setupUi(self):
@@ -165,7 +167,7 @@ class Ui_hibo(QtGui.QDialog):
             print "Layer failed to load!"
             return
         self.rlayer = self.rlayer_temp
-        self.rlayer.extent()
+        #self.rlayer.extent()
         self.layerlistr = []
         self.layerlistr.append(self.rlayer)
         QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
@@ -280,6 +282,7 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def end(self):
+        global ended
         matlab=['C:\\Users\\Freddy\\HiBo-plugin\\matlab\\test1.exe']
         matlab.append(str(-self.clickClack.getCounter())) #0 for first step; 1 for first click and so on
         for i in range(4):
@@ -290,17 +293,8 @@ class Ui_hibo(QtGui.QDialog):
 
         matlab=subprocess.Popen(matlab)
         matlab.wait()
-        
-        lines = [float(line.strip()) for line in open('C:/matlabPython/polyline.txt')]
+        self.ended=True
 
-        crsSrc = QgsCoordinateReferenceSystem(3857)
-        crsDest = QgsCoordinateReferenceSystem(4326)  
-        xform = QgsCoordinateTransform(crsSrc, crsDest)
-        test_map=[]
-        for i in range(len(lines)/2):
-            pt = xform.transform(QgsPoint(lines[2*i],lines[2*i+1]))
-            test_map.append([pt.x(),pt.y()])
-        reduce.execute(test_map,"reducedBorder.geojson")
     
     @QtCore.pyqtSlot()
     def loadResultRasterImage(self, canvas):
@@ -329,13 +323,11 @@ class Ui_hibo(QtGui.QDialog):
         matlab=subprocess.Popen(matlab)
         matlab.wait()
     
-        #fileName2Transform= os.path.dirname(__file__)+"/Maps/tMap.jpg"
         fileName2Transform= 'C:/matlabPython/transformedMap.bmp'
         lines = [float(line.strip()) for line in open('C:/matlabPython/coords.txt')]
         print (lines)
         self.transform(fileName2Transform,lines[0],lines[1],lines[2],lines[3])
         fileNameOut= os.path.dirname(__file__)+"/Maps/outputMap.GTiff"
-        #fileNameOut='C:/matlabPython/transformedMap.bmp'
         fileInfo = QFileInfo(fileNameOut)
         baseNameOut = fileInfo.baseName()
         self.rlayer2 = QgsRasterLayer(fileNameOut, baseNameOut)
@@ -389,23 +381,3 @@ class Ui_hibo(QtGui.QDialog):
         if not geotransform is None:
             print 'Origin = (',geotransform[0], ',',geotransform[3],')'
             print 'Pixel Size = (',geotransform[1], ',',geotransform[5],')'
-
-        """band = dataset.GetRasterBand(1)
-
-        print 'Band Type=',gdal.GetDataTypeName(band.DataType)
-
-        min = band.GetMinimum()
-        max = band.GetMaximum()
-        if min is None or max is None:
-            (min,max) = band.ComputeRasterMinMax(1)
-        print 'Min=%.3f, Max=%.3f' % (min,max)
-
-        if band.GetOverviewCount() > 0:
-            print 'Band has ', band.GetOverviewCount(), ' overviews.'
-
-        if not band.GetRasterColorTable() is None:
-            print 'Band has a color table with ', band.GetRasterColorTable().GetCount(), ' entries.'
-
-        scanline = band.ReadRaster( 0, 0, band.XSize, 1, band.XSize, 1, GDT_Float32 )
-        tuple_of_floats = struct.unpack('f' * band.XSize, scanline)"""
-

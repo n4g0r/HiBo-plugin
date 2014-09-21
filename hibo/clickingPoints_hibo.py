@@ -6,6 +6,9 @@ from qgis.core import *
 from qgis.gui import *
 from georef_hibo import georef
 import os, subprocess
+import reduce
+import math
+
 
 
 class clickingP(QgsMapToolEmitPoint):
@@ -14,13 +17,17 @@ class clickingP(QgsMapToolEmitPoint):
         self.canvas = ui.canvas
         self.layoutPipeline = layoutPipeline
         self.counter=1
+        self.startendcounter=0
+        self.startendarray=[]
         QgsMapToolEmitPoint.__init__(self, self.canvas)
 
     def reset(self):    
         pass
 
     def canvasPressEvent(self, e):
-        if self.layoutPipeline.currentIndex()== 1:
+        print self.ui.ended
+        print self.layoutPipeline.currentIndex()== 1 and self.ui.ended==False
+        if self.layoutPipeline.currentIndex()== 1 and self.ui.ended==False:
             self.marker = QgsVertexMarker(self.canvas)
             self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
             print self.marker.toMapCoordinates(e.pos()).x()
@@ -63,6 +70,57 @@ class clickingP(QgsMapToolEmitPoint):
             self.old_layers.reverse()
             self.canvas.setLayerSet( self.old_layers )
             self.canvas.refresh()
+        elif self.layoutPipeline.currentIndex()== 1 and self.ui.ended==True:
+            self.startendcounter=self.startendcounter+1
+            self.marker = QgsVertexMarker(self.canvas)
+            self.marker.setCenter(self.marker.toMapCoordinates(e.pos()))
+            print self.marker.toMapCoordinates(e.pos()).x()
+            self.startendarray.append(self.marker.toMapCoordinates(e.pos()).x())
+            print self.marker.toMapCoordinates(e.pos()).y()
+            self.startendarray.append(self.marker.toMapCoordinates(e.pos()).y())
+            print self.startendarray
+            
+            if self.startendcounter>=2:
+                lines = [float(line.strip()) for line in open('C:/matlabPython/polyline.txt')]
+                
+                x1delta=self.startendarray[0]-lines[0]
+                y1delta=self.startendarray[1]-lines[1]
+                x2delta=self.startendarray[2]-lines[len(lines)-2]
+                y2delta=self.startendarray[3]-lines[len(lines)-1]
+                case1 = math.sqrt(abs(x1delta+y1delta))+math.sqrt(abs(x2delta+y2delta))
+                
+                _x1delta=self.startendarray[0]-lines[len(lines)-2]
+                _y1delta=self.startendarray[1]-lines[len(lines)-1]
+                _x2delta=self.startendarray[2]-lines[0]
+                _y2delta=self.startendarray[3]-lines[1]
+                case2= math.sqrt(abs(_x1delta+_y1delta))+math.sqrt(abs(_x2delta+_y2delta))
+                                
+                if case1<case2:
+                    print "case 1"
+                    for i in range(len(lines)/2):
+                        v1=(len(lines)-i*2)/float(len(lines))
+                        v2=1-v1
+                        lines[i*2]-=v1*x1delta+v2*x2delta
+                        lines[i*2+1]-=v1*y1delta+v2*y2delta
+                
+                else:
+                    print "case 2"
+                    for i in range(len(lines)/2):
+                        v1=(len(lines)-i*2)/float(len(lines))
+                        print(v1)
+                        v2=1-v1
+                        lines[i*2]-= v1*_y1delta+v2*_y2delta
+                        lines[i*2+1]-= v1*_x1delta+v2*_x2delta               
+                
+                
+                crsSrc = QgsCoordinateReferenceSystem(3857)
+                crsDest = QgsCoordinateReferenceSystem(4326)  
+                xform = QgsCoordinateTransform(crsSrc, crsDest)
+                test_map=[]
+                for i in range(len(lines)/2):
+                    pt = xform.transform(QgsPoint(lines[2*i],lines[2*i+1]))
+                    test_map.append([pt.x(),pt.y()])
+                reduce.execute(test_map,"reducedBorder.geojson")
 
     def canvasReleaseEvent(self, e):
         pass

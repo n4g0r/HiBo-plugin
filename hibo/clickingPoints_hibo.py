@@ -49,17 +49,19 @@ class clickingP(QgsMapToolEmitPoint):
                 print "Layer failed to load!"
                 return
             qrt=QgsRasterTransparency()
-            qrt.initializeTransparentPixelList(255)
+            qrt.initializeTransparentPixelList(255,255,255)
             self.rlayer2.renderer().setRasterTransparency(qrt)
-            #self.rlayer2.renderer().setOpacity(0.5)
             self.layerlistr = []
             self.layerlistr.append(self.rlayer2)
             QgsMapLayerRegistry.instance().addMapLayers(self.layerlistr, False) 
             self.old_layers=self.ui.vectorMapCanvasLayerList
+
+            self.old_layers.reverse()
+            if len(self.old_layers)>6:
+                self.old_layers.pop()
             self.old_layers.append(QgsMapCanvasLayer(self.rlayer2))
+            self.old_layers.reverse()
             self.canvas.setLayerSet( self.old_layers )
-            self.canvas.setCurrentLayer(self.rlayer2)
-            self.canvas.setVisible(True)
             self.canvas.refresh()
 
     def canvasReleaseEvent(self, e):

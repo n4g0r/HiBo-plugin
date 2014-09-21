@@ -23,7 +23,6 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,fileName)
     
     if (first==0)  
  %%%%%%%%%%%%%% read input and crop %%%%%%%%%%%
-        save ('C:/matlabPython/data.mat','fileName')
         [inputMapCrop,c] = imread(fileName);       %Read image 
 
         inputMapCrop=inputMapCrop(-cropYmax:-cropYmin,cropXmin:cropXmax,:);
@@ -210,6 +209,8 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,fileName)
                 transformedBorder(i,j)=interpImg(border,[proPos(2)+cropYmax, proPos(1)-cropXmin]);
             end
         end
+        transformedBorder = repmat(double(transformedBorder),[1 1 3]);
+        transformedBorder(:,:,1)=1;
         imwrite(transformedBorder,'C:/matlabPython/transformedBorder.bmp');
         save ('C:/matlabPython/debug1.mat')
     end

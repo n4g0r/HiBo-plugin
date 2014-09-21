@@ -15,23 +15,23 @@ Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\deployprint
 Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\printdlg.m"
 	(Referenced from: "Compiler Command Line").
 Deleting 17 temporary MEX authorization files.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_19802_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_3221_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_13678_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_18747_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_23802_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_1469_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_11046_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_14530_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_16277_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_24728_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_20426_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_29560_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_15569_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_27405_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_2867_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_3357_8068.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_30587_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_29758_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_8731_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_5077_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_22633_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_23126_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_20165_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_1860_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_20241_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_19391_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_8614_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_9097_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_7373_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_22315_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_3261_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_30837_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_8375_3440.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_3440_29599_3440.auth'.
 Generating file "C:\Users\Freddy\HiBo-plugin\matlab\readme.txt".
 Packaging...
 Adding custom icon C:\Program Files\MATLAB\R2014a\toolbox\compiler\Resources\default_icon.ico to C:\Users\Freddy\HiBo-plugin\matlab\test1.exe.

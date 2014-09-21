@@ -24,6 +24,6 @@ class hibo:
         self.iface.removeToolBarIcon(self.action)
 
     def run(self): 
-        #self.gui.showMaximized()
+        self.gui.showMaximized()
         self.gui.show()
         result = self.gui.exec_()

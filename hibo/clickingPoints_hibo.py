@@ -64,8 +64,9 @@ class clickingP(QgsMapToolEmitPoint):
             self.old_layers=self.ui.vectorMapCanvasLayerList
 
             self.old_layers.reverse()
-            if len(self.old_layers)>6:
+            if len(self.old_layers)>7:
                 self.old_layers.pop()
+                print('pop')
             self.old_layers.append(QgsMapCanvasLayer(self.rlayer2))
             self.old_layers.reverse()
             self.canvas.setLayerSet( self.old_layers )
@@ -100,18 +101,16 @@ class clickingP(QgsMapToolEmitPoint):
                     for i in range(len(lines)/2):
                         v1=(len(lines)-i*2)/float(len(lines))
                         v2=1-v1
-                        lines[i*2]-=v1*x1delta+v2*x2delta
-                        lines[i*2+1]-=v1*y1delta+v2*y2delta
-                
+                        lines[i*2]+=v1*x1delta+v2*x2delta
+                        lines[i*2+1]+=v1*y1delta+v2*y2delta
                 else:
                     print "case 2"
                     for i in range(len(lines)/2):
                         v1=(len(lines)-i*2)/float(len(lines))
-                        print(v1)
                         v2=1-v1
-                        lines[i*2]-= v1*_y1delta+v2*_y2delta
-                        lines[i*2+1]-= v1*_x1delta+v2*_x2delta               
-                
+                        lines[i*2]+= v2*_x1delta+v1*_x2delta
+                        lines[i*2+1]+= v2*_y1delta+v1*_y2delta               
+
                 
                 crsSrc = QgsCoordinateReferenceSystem(3857)
                 crsDest = QgsCoordinateReferenceSystem(4326)  
@@ -120,7 +119,13 @@ class clickingP(QgsMapToolEmitPoint):
                 for i in range(len(lines)/2):
                     pt = xform.transform(QgsPoint(lines[2*i],lines[2*i+1]))
                     test_map.append([pt.x(),pt.y()])
-                reduce.execute(test_map,"reducedBorder.geojson")
+                    
+                fileName = QFileDialog.getSaveFileName(None, "border map", ".", "Geojson Files (*.geojson)")
+                reduce.execute(test_map,fileName)
+                fileInfo = QFileInfo(fileName)
+                baseName = fileInfo.baseName()
+                vlayer = QgsVectorLayer(fileName, baseName, "ogr")
+                QgsMapLayerRegistry.instance().addMapLayer(vlayer)
 
     def canvasReleaseEvent(self, e):
         pass

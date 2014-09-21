@@ -3,7 +3,7 @@ ant:
   <mkdir dir="C:\doentmatter" />
   <mkdir dir="C:\Users\Freddy\HiBo-plugin\matlab" />
 </ant>
-mcc -C -o test1 -W WinMain:test1 -T link:exe -d C:\Users\Freddy\HiBo-plugin\matlab -v C:\Users\Freddy\HiBo-plugin\m-files\test1.m 
+mcc -C -o test1 -W WinMain:test1 -T link:exe -d C:\Users\Freddy\HiBo-plugin\matlab -v C:\Users\Freddy\HiBo-plugin\m-files\test1.m -a C:\Users\Freddy\HiBo-plugin\m-files\canny.m -a C:\Users\Freddy\HiBo-plugin\m-files\derivative5.m -a C:\Users\Freddy\HiBo-plugin\m-files\findendsjunctions.m -a C:\Users\Freddy\HiBo-plugin\m-files\gaussfilt.m -a C:\Users\Freddy\HiBo-plugin\m-files\homo.m -a C:\Users\Freddy\HiBo-plugin\m-files\interpImg.m -a C:\Users\Freddy\HiBo-plugin\m-files\nonmaxsup.m 
 Compiler version: 5.1 (R2014a)
 Dependency analysis by REQUIREMENTS.
 [Warning: Adding path "C:\Users\Freddy\HiBo-plugin\m-files" to Compiler path
@@ -15,23 +15,23 @@ Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\deployprint
 Parsing file "C:\Program Files\MATLAB\R2014a\toolbox\compiler\deploy\printdlg.m"
 	(Referenced from: "Compiler Command Line").
 Deleting 17 temporary MEX authorization files.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_7614_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_13937_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_28440_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_7568_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_9931_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_13152_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_8772_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_12128_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_29600_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_14677_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_28997_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_11510_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_4949_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_2074_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_5524_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_16248_7888.auth'.
-Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_7888_18882_7888.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_19802_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_3221_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_13678_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_18747_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_23802_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_1469_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_11046_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_14530_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_16277_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_24728_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_20426_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_29560_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_15569_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_27405_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_2867_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_3357_8068.auth'.
+Removing: 'C:\Users\Freddy\AppData\Local\Temp\mathworks_tmp_8068_30587_8068.auth'.
 Generating file "C:\Users\Freddy\HiBo-plugin\matlab\readme.txt".
 Packaging...
 Adding custom icon C:\Program Files\MATLAB\R2014a\toolbox\compiler\Resources\default_icon.ico to C:\Users\Freddy\HiBo-plugin\matlab\test1.exe.

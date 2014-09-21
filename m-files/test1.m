@@ -1,4 +1,4 @@
-function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4,p2_1,p2_2,p2_3,p2_4,p3_1,p3_2,p3_3,p3_4,p4_1,p4_2,p4_3,p4_4)
+function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,fileName)
 
     first=str2num(first)
     cropXmin=str2num(cropXmin)
@@ -7,20 +7,24 @@ function test1(first,cropXmin,cropYmax,cropXmax,cropYmin,x,y,p1_1,p1_2,p1_3,p1_4
     cropYmin=str2num(cropYmin)
     x=str2num(x)
     y=str2num(y)
-    
-    x1 =[str2num(p1_1), str2num(p2_1),  str2num(p3_1),  str2num(p4_1);
-         str2num(p1_2), str2num(p2_2),  str2num(p3_2),  str2num(p4_2);
-     1,                  1,                  1,                  1    ]
-    
-    x2 =[str2num(p1_3), str2num(p2_3),  str2num(p3_3),  str2num(p4_3);
-         str2num(p1_4), str2num(p2_4),  str2num(p3_4),  str2num(p4_4);
-     1,                 1,                   1,                  1    ]
+     
+    pointsHandle = fopen('C:/matlabPython/points.txt','r');
+    points=textscan(pointsHandle,'%f')
+    fclose(pointsHandle);
+    points=cell2mat(points)
+    x1=[]
+    x2=[]
+    for i=(1:size(points,1)/4)
+        x1=horzcat(x1,[points(i*4-3);points(i*4-2);1])
+        x2=horzcat(x2,[points(i*4-1);points(i*4);1])
+    end
     
     global cannyMap border junctions borderMap borderMapDone latest h  cropXmin cropYmax
     
     if (first==0)  
  %%%%%%%%%%%%%% read input and crop %%%%%%%%%%%
-        [inputMapCrop,c] = imread('C:/matlabPython/SimpleMap.jpg');       %Read image 
+        save ('C:/matlabPython/data.mat','fileName')
+        [inputMapCrop,c] = imread(fileName);       %Read image 
 
         inputMapCrop=inputMapCrop(-cropYmax:-cropYmin,cropXmin:cropXmax,:);
         if c ~= 0                                %Check if c value is greater than zero. If yes the convert it to rgb.

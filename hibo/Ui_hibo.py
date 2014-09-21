@@ -152,10 +152,10 @@ class Ui_hibo(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def loadRasterImage(self):
+        global fileName
         s = QSettings()
         oldValidation = s.value( "/Projections/defaultBehaviour", "useGlobal" )
         s.setValue( "/Projections/defaultBehaviour", "useGlobal" )
-
         fileName = QFileDialog.getOpenFileName(None, "historical map", ".", "Image Files (*.png *.jpg *.bmp *.tiff)")
         fileInfo = QFileInfo(fileName)
         baseName = fileInfo.baseName()
@@ -286,11 +286,8 @@ class Ui_hibo(QtGui.QDialog):
             matlab.append(str(0)) #xmin etc....
         matlab.append('-1') #xclick
         matlab.append('-1') #yclick
-        for i in range(4):
-            matlab.append(str(0))
-            matlab.append(str(0))
-            matlab.append(str(0))
-            matlab.append(str(0))
+        matlab.append('-') #filename
+
         matlab=subprocess.Popen(matlab)
         matlab.wait()
         
@@ -315,15 +312,18 @@ class Ui_hibo(QtGui.QDialog):
         matlab.append(str(sam.getArea()[3])) #ymin
         matlab.append('-1') #xclick
         matlab.append('-1') #yclick
-        for i in range(4):
-            matlab.append(str(self.georef.getPointPair(i)[0]))
-            matlab.append(str(self.georef.getPointPair(i)[1]))
-            matlab.append(str(self.georef.getPointPair(i)[2]))
-            matlab.append(str(self.georef.getPointPair(i)[3]))
+        matlab.append(fileName)
             
-        fobj = open('C:/matlabPython/points.txt', "w") 
-        fobj.write(str(self.georef.getPointPair(0)))
-        fobj.write(str(self.georef.getPointPair(1))) 
+        fobj = open('C:/matlabPython/points.txt', "w")
+        for  i in range(self.georef.gimmeDemPoints()):
+            fobj.write(str(self.georef.getPointPair(i)[0]))
+            fobj.write("\n")
+            fobj.write(str(self.georef.getPointPair(i)[1]))
+            fobj.write("\n")
+            fobj.write(str(self.georef.getPointPair(i)[2]))
+            fobj.write("\n")
+            fobj.write(str(self.georef.getPointPair(i)[3]))
+            fobj.write("\n")
         fobj.close()
         
         matlab=subprocess.Popen(matlab)

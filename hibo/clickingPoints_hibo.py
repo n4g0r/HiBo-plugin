@@ -32,11 +32,7 @@ class clickingP(QgsMapToolEmitPoint):
                 matlab.append(str(0)) #xmin etc....
             matlab.append(str(clicked_point.x())) #xclick
             matlab.append(str(clicked_point.y())) #yclick
-            for i in range(4):
-                matlab.append(str(0))
-                matlab.append(str(0))
-                matlab.append(str(0))
-                matlab.append(str(0))
+            matlab.append('-') #filename
             matlab=subprocess.Popen(matlab)
             matlab.wait()
             self.counter=self.counter+1

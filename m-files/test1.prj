@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="2806659245" file="C:\Users\Freddy\HiBo-plugin\m-files\test1.prj" location="C:\Users\Freddy\HiBo-plugin\m-files" name="test1" preferred-package-location="C:\doentmatter" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
+  <configuration build-checksum="4249923579" file="C:\Users\Freddy\HiBo-plugin\m-files\test1.prj" location="C:\Users\Freddy\HiBo-plugin\m-files" name="test1" preferred-package-location="C:\doentmatter" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
     <param.appname>test1</param.appname>
     <param.icon />
     <param.icons />
